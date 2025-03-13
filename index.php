@@ -1,7 +1,8 @@
 <?php
-require_once __DIR__ . '/Controller/homecontroller.php';
+require_once __DIR__ . '/Controller/OrderController.php';
 
+require_once './View/paymentView.php';
 
-$controller = new HomeController();
-$controller->index();
+$controller = new OrderController();
+$controller->checkout();
 ?>
