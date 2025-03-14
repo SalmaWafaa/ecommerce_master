@@ -1,19 +1,22 @@
 <?php
-require_once __DIR__ . '/ICategory.php';
-//require_once __DIR__ . '/IProduct.php';
-class CategoryComposite implements ICategory {
-    private int $id;
-    private string $name;
-    private string $image;
-    private ?ICategory $parentCategory;
-    private array $subcategories = [];
-    private array $products = [];
 
-    public function __construct(int $id, string $name, string $image, ?ICategory $parentCategory = null) {
-        $this->id = $id;
-        $this->name = $name;
-        $this->image = $image;
-        $this->parentCategory = $parentCategory;
+require_once __DIR__ . '/../../config/Database.php';
+require_once __DIR__ . '/ICategory.php';
+
+class CategoryComposite implements ICategory {
+    protected $conn;
+    protected $table = 'categories';
+
+    public $id;
+    public $name;
+    public $image;
+    public $parent_id;
+    public $subcategories = [];
+    public $products = [];
+
+    public function __construct() {
+        $dbConnection = Database::getInstance();
+        $this->conn = $dbConnection->getConnection();
     }
 
     public function getId(): int {
@@ -29,28 +32,63 @@ class CategoryComposite implements ICategory {
     }
 
     public function getParentCategory(): ?ICategory {
-        return $this->parentCategory;
-    }
+        if ($this->parent_id) {
+            $query = "SELECT * FROM {$this->table} WHERE id = ?";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bind_param("i", $this->parent_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $parentData = $result->fetch_assoc();
 
-    public function getSubcategories(): array {
-        return $this->subcategories;
+            if ($parentData) {
+                $parentCategory = new CategoryComposite();
+                $parentCategory->id = $parentData['id'];
+                $parentCategory->name = $parentData['name'];
+                $parentCategory->image = $parentData['image'];
+                $parentCategory->parent_id = $parentData['parent_id'];
+                return $parentCategory;
+            }
+        }
+        return null;
+    }
+    public function getMainCategories() {
+        $query = "SELECT * FROM categories WHERE parent_id IS NULL";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+    public function getSubcategories($parent_id) {
+        $query = "SELECT * FROM categories WHERE parent_id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $parent_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
     }
 
     public function getProducts(): array {
-        return $this->products;
+        $query = "SELECT * FROM products WHERE category_id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $this->id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function addProduct(IProduct $product): void {
+    public function addProduct($product): void {
         $this->products[] = $product;
     }
 
     public function removeProduct(int $productId): void {
-        $this->products = array_filter($this->products, fn($product) => $product->getId() !== $productId);
+        $this->products = array_filter($this->products, function ($product) use ($productId) {
+            return $product['id'] !== $productId;
+        });
     }
 
-    public function getProductById(int $productId): ?IProduct {
+    public function getProductById(int $productId): ?array {
         foreach ($this->products as $product) {
-            if ($product->getId() === $productId) {
+            if ($product['id'] === $productId) {
                 return $product;
             }
         }
@@ -62,7 +100,9 @@ class CategoryComposite implements ICategory {
     }
 
     public function removeSubcategory(int $categoryId): void {
-        $this->subcategories = array_filter($this->subcategories, fn($category) => $category->getId() !== $categoryId);
+        $this->subcategories = array_filter($this->subcategories, function ($category) use ($categoryId) {
+            return $category->getId() !== $categoryId;
+        });
     }
 
     public function getSubcategoryById(int $categoryId): ?ICategory {
@@ -72,5 +112,26 @@ class CategoryComposite implements ICategory {
             }
         }
         return null;
+    }
+
+    public function save(): bool {
+        $query = "INSERT INTO {$this->table} (name, image, parent_id) VALUES (?, ?, ?)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("ssi", $this->name, $this->image, $this->parent_id);
+        return $stmt->execute();
+    }
+
+    public function update(): bool {
+        $query = "UPDATE {$this->table} SET name = ?, image = ?, parent_id = ? WHERE id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("ssii", $this->name, $this->image, $this->parent_id, $this->id);
+        return $stmt->execute();
+    }
+
+    public function delete(): bool {
+        $query = "DELETE FROM {$this->table} WHERE id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $this->id);
+        return $stmt->execute();
     }
 }
