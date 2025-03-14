@@ -3,7 +3,10 @@
 require_once 'C:\xampp\htdocs\ecommerce_master\Model\Category\CategoryComposite.php';
 
 class FemaleSkirtCategory extends CategoryComposite {
-    public function __construct(int $id, string $name, string $image, ?ICategory $parentCategory = null) {
-        parent::__construct($id, $name, $image, $parentCategory);
+    public function __construct() {
+        parent::__construct();
+        $this->name = " Female Skirt";
+        $this->image = "female.jpg";
     }
 }
+?>
