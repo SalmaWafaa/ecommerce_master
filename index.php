@@ -1,29 +1,16 @@
 <?php
 
-<<<<<<< HEAD
-require_once './Controller/CartController.php';
-require_once './View/CartView.php';
-=======
 // Autoload classes
 spl_autoload_register(function ($class_name) {
     $directories = [
         __DIR__ . '/Controller/',
         __DIR__ . '/Model/Products/'
     ];
->>>>>>> cdc2bbf2e3911df6646bb54a79556397b9fd0dd1
 
 if (!isset($_SESSION['customer_id'])) {
     $_SESSION['customer_id'] = 1; // Example: Assign a dummy customer ID for testing
 }
 
-<<<<<<< HEAD
-$cartController = new CartController();
-$cartView = new CartView($cartController);
-
-$cartView->renderCart();
-
-?>
-=======
     foreach ($directories as $directory) {
         $file = $directory . $class_name . '.php';
         if (file_exists($file)) {
@@ -76,4 +63,3 @@ try {
 } catch (Exception $e) {
     die("Error: " . $e->getMessage());
 }
->>>>>>> cdc2bbf2e3911df6646bb54a79556397b9fd0dd1
