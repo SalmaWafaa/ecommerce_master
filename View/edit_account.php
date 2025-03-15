@@ -3,8 +3,8 @@
 // session_start();
 
 // // Include the Customer class and Database configuration
-// require_once 'E:\xampp\htdocs\ecommerce_master\Model\Customer.php'; // Adjust the path as needed
-// require_once 'E:\xampp\htdocs\ecommerce_master\config\Database.php'; // Adjust the path as needed
+// require_once 'C:\xampp\htdocs\ecommerce_master\Model\Customer.php'; // Adjust the path as needed
+// require_once 'C:\xampp\htdocs\ecommerce_master\config\Database.php'; // Adjust the path as needed
 
 // // Check if the customer is logged in
 // if (!isset($_SESSION['customer_id'])) {

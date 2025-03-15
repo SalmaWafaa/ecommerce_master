@@ -1,7 +1,7 @@
 <?php
 
 require_once 'User.php';
-require_once 'E:\xampp\htdocs\ecommerce_master\config\Database.php';
+require_once 'C:\xampp\htdocs\ecommerce_master\config\Database.php';
 
 class Admin extends User {
     private $db;

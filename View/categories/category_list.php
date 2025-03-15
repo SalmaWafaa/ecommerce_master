@@ -107,9 +107,79 @@
         .add-button:hover {
             background-color: #138496;
         }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #007bff;
+            color: white;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .auth-buttons a {
+            text-decoration: none;
+        }
+
+        .auth-buttons button {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            color: white;
+        }
+
+        .login-button {
+            background-color: #28a745;
+        }
+
+        .login-button:hover {
+            background-color: #218838;
+        }
+
+        .register-button {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .register-button:hover {
+            background-color: #e0a800;
+        }
     </style>
 </head>
 <body>
+<div class="header">
+    <h1>HomePage</h1>
+    <div class="auth-buttons">
+        <a href="http://localhost/ecommerce_master/View/login.php
+">
+            <button class="login-button">Login</button>
+        </a>
+        <a href="http://localhost/ecommerce_master/View/register.php"
+>
+            <button class="register-button">Register</button>
+        </a>
+    </div>
+</div>
+
     <div class="container">
         <h1>Categories</h1>
 

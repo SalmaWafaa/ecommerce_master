@@ -4,7 +4,7 @@ class Database {
     private static $instance = null;
     private $connection;
 
-    private function __construct() {
+    public function __construct() {
         $this->connection = new mysqli("localhost", "root", "", "sweproj");
         
         if ($this->connection->connect_error) {
