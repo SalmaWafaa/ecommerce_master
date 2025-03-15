@@ -1,20 +1,18 @@
 <?php
 
-class Database{
+class Database {
     private static $instance = null;
     private $connection;
 
-    public function __construct() {
+    private function __construct() {
         $this->connection = new mysqli("localhost", "root", "", "sweproj");
-
+        
         if ($this->connection->connect_error) {
             throw new Exception("Database Connection Failed: " . $this->connection->connect_error);
         }
 
         // Set character encoding
-        if (!$this->connection->set_charset("utf8mb4")) {
-            throw new Exception("Error setting character encoding: " . $this->connection->error);
-        }
+        $this->connection->set_charset("utf8mb4");
     }
 
     public static function getInstance() {
@@ -35,9 +33,6 @@ class Database{
             self::$instance = null;
         }
     }
-
-    private function __clone() {}
-    public function __wakeup() {
-        throw new Exception("Cannot unserialize a singleton.");
-    }
 }
+
+?>
