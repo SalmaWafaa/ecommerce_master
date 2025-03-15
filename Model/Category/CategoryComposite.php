@@ -134,4 +134,26 @@ class CategoryComposite implements ICategory {
         $stmt->bind_param("i", $this->id);
         return $stmt->execute();
     }
+    public function getCategoryById($id) {
+        $query = "SELECT * FROM {$this->table} WHERE id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
+    }
+    public function deleteById($id): bool {
+        // Delete all associated products first
+        $deleteProductsQuery = "DELETE FROM products WHERE category_id = ?";
+        $stmt = $this->conn->prepare($deleteProductsQuery);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+    
+        // Now delete the category
+        $deleteQuery = "DELETE FROM {$this->table} WHERE id = ?";
+        $stmt = $this->conn->prepare($deleteQuery);
+        $stmt->bind_param("i", $id);
+        return $stmt->execute();
+    }
+    
 }
