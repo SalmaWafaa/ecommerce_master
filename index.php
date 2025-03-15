@@ -3,8 +3,8 @@
 // Autoload classes
 spl_autoload_register(function ($class_name) {
     $directories = [
-        'C:/xampp/htdocs/ecommerce_master/Controller/',
-        'C:/xampp/htdocs/ecommerce_master/Model/Products/'
+        __DIR__ . '/Controller/',
+        __DIR__ . '/Model/Products/'
     ];
 
     $class_name = str_replace('\\', '/', $class_name);
@@ -12,47 +12,52 @@ spl_autoload_register(function ($class_name) {
     foreach ($directories as $directory) {
         $file = $directory . $class_name . '.php';
         if (file_exists($file)) {
-            include $file;
+            require_once $file;
             return;
         }
     }
-
-    throw new Exception("Class {$class_name} not found in Controller or Model directories.");
+    die("Class '{$class_name}' not found.");
 });
 
 // Database configuration
-require_once 'C:/xampp/htdocs/ecommerce_master/config/Database.php';
+require_once __DIR__ . '/config/Database.php';
 
 // Get the controller and action from the URL
-$controller = $_GET['controller'] ?? 'Category'; // Default controller is 'Category'
-$action = $_GET['action'] ?? 'listCategories';  // Default action is 'listCategories'
+$controller = $_GET['controller'] ?? 'Category'; // Default controller
+$action = $_GET['action'] ?? 'listCategories';  // Default action
 
 // Construct the controller class name
 $controllerClassName = ucfirst($controller) . 'Controller';
 
-// Check if the controller class exists
-if (class_exists($controllerClassName)) {
+try {
+    // Check if the controller class exists
+    if (!class_exists($controllerClassName)) {
+        throw new Exception("Controller '{$controllerClassName}' not found.");
+    }
+
     // Instantiate the controller
     $controllerInstance = new $controllerClassName();
 
     // Check if the action method exists in the controller
-    if (method_exists($controllerInstance, $action)) {
-        // Call the action method
-        if (isset($_GET['subcategory_id'])) {
-            // Pass the subcategory_id parameter if it exists
-            $controllerInstance->$action($_GET['subcategory_id']);
-        } elseif (isset($_GET['id'])) {
-            // Pass the ID parameter if it exists
-            $controllerInstance->$action($_GET['id']);
-        } else {
-            // Call the action without parameters
-            $controllerInstance->$action();
-        }
-    } else {
-        // Handle invalid action
-        die("Action '$action' not found in controller '$controllerClassName'.");
+    if (!method_exists($controllerInstance, $action)) {
+        throw new Exception("Action '{$action}' not found in controller '{$controllerClassName}'.");
     }
-} else {
-    // Handle invalid controller
-    die("Controller '$controllerClassName' not found.");
+
+    // Prepare parameters for the action method
+    $params = [];
+
+    // If the action is 'deleteProduct', pass the product ID
+    if ($action === 'deleteProduct') {
+        $params = [$_GET['id'] ?? null];
+    } else {
+        // For other actions, pass only the relevant GET parameters
+        $params = array_values(array_filter($_GET, function($key) {
+            return $key !== 'controller' && $key !== 'action';
+        }, ARRAY_FILTER_USE_KEY));
+    }
+
+    // Call the action method with the prepared parameters
+    call_user_func_array([$controllerInstance, $action], $params);
+} catch (Exception $e) {
+    die("Error: " . $e->getMessage());
 }

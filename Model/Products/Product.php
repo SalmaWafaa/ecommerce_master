@@ -134,12 +134,12 @@ class Product {
         $query = "DELETE FROM {$this->table} WHERE id = ?";
         $stmt = $this->conn->prepare($query);
         $stmt->bind_param("i", $this->id);
-
+    
         if ($stmt->execute()) {
             $stmt->close();
             return true;
         }
-
+    
         $stmt->close();
         return false;
     }
