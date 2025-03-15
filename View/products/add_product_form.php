@@ -1,38 +1,58 @@
-<!-- C:\xampp\htdocs\ecommerce_master\View\products\add_product_form.php -->
+<?php
+// add_product_form.php
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Product</title>
+    <style>
+        /* Add your CSS styles here */
+    </style>
 </head>
 <body>
-    <h1>Add Product</h1>
+    <h1>Add New Product</h1>
     <form action="index.php?controller=Product&action=createProduct" method="POST">
-        <input type="hidden" name="category_id" value="<?php echo $_GET['category_id']; ?>">
+        <!-- Product Name -->
+        <label for="name">Product Name:</label>
+        <input type="text" id="name" name="name" required>
 
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required><br>
+        <!-- Category ID -->
+        <label for="category_id">Category ID:</label>
+        <input type="number" id="category_id" name="category_id" required>
 
-        <label for="product_type_id">Product Type ID:</label>
-        <input type="number" id="product_type_id" name="product_type_id" required><br>
+        <!-- Product Type ID -->
+        <label for="product_type_id">Product Type:</label>
+        <select id="product_type_id" name="product_type_id" required>
+            <option value="1">Basic Shirt</option>
+            <option value="2">Basic Pants</option>
+            <!-- Add more options as needed -->
+        </select>
 
+        <!-- Description -->
         <label for="description">Description:</label>
-        <textarea id="description" name="description" required></textarea><br>
+        <textarea id="description" name="description" rows="4" required></textarea>
 
+        <!-- Price -->
         <label for="price">Price:</label>
-        <input type="number" id="price" name="price" step="0.01" required><br>
+        <input type="number" id="price" name="price" step="0.01" required>
 
-        <label for="on_sale">On Sale (%):</label>
-        <input type="number" id="on_sale" name="on_sale" step="0.01" min="0" max="100" value="0.00"><br>
+        <!-- On Sale Percentage -->
+        <label for="on_sale">On Sale Percentage:</label>
+        <input type="number" id="on_sale" name="on_sale" step="0.01" min="0" max="100" required>
 
+        <!-- Rate -->
         <label for="rate">Rate:</label>
-        <input type="number" id="rate" name="rate" step="0.01" min="0" max="5" value="0.00"><br>
+        <input type="number" id="rate" name="rate" step="0.1" required>
 
+        <!-- Quantity -->
         <label for="quantity">Quantity:</label>
-        <input type="number" id="quantity" name="quantity" min="0" required><br>
+        <input type="number" id="quantity" name="quantity" required>
 
-        <button type="submit">Add Product</button>
+        <!-- Submit Button -->
+        <input type="submit" value="Add Product">
     </form>
 </body>
 </html>
