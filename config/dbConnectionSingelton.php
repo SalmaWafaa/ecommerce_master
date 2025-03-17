@@ -1,10 +1,10 @@
 <?php
 
-class Database {
+class DatabaseConnection {
     private static $instance = null;
     private $connection;
 
-    public function __construct() {
+    private function __construct() {
         $this->connection = new mysqli("localhost", "root", "", "sweproj");
         
         if ($this->connection->connect_error) {
@@ -17,7 +17,7 @@ class Database {
 
     public static function getInstance() {
         if (!self::$instance) {
-            self::$instance = new Database();
+            self::$instance = new DatabaseConnection();
         }
         return self::$instance;
     }
@@ -36,3 +36,4 @@ class Database {
 }
 
 ?>
+<!--  -->

@@ -3,8 +3,8 @@
 require_once 'C:\xampp\htdocs\ecommerce_master\config\Database.php';
 
 class Product {
-    private $conn;
-    private $table = 'products';
+    protected $conn;
+    protected $table = 'products';
 
     // Product properties
     public $id;
@@ -18,9 +18,22 @@ class Product {
     public $quantity;
 
     // Constructor with database connection
-    public function __construct() {
+    public function __construct($data = []) {
         $database = new Database();
         $this->conn = $database->getConnection();
+
+        // Initialize properties if data is provided
+        if (!empty($data)) {
+            $this->id = $data['id'] ?? null;
+            $this->name = $data['name'] ?? '';
+            $this->category_id = $data['category_id'] ?? '';
+            $this->product_type_id = $data['product_type_id'] ?? '';
+            $this->description = $data['description'] ?? '';
+            $this->price = $data['price'] ?? 0;
+            $this->on_sale = $data['on_sale'] ?? 0;
+            $this->rate = $data['rate'] ?? 0;
+            $this->quantity = $data['quantity'] ?? 0;
+        }
     }
 
     // Create a new product
@@ -75,6 +88,7 @@ class Product {
         $stmt->close();
         return false;
     }
+
     // Read all products
     public function read() {
         $query = "SELECT * FROM {$this->table}";
@@ -130,19 +144,7 @@ class Product {
     }
 
     // Delete a product
-    public function delete() {
-        $query = "DELETE FROM {$this->table} WHERE id = ?";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("i", $this->id);
-
-        if ($stmt->execute()) {
-            $stmt->close();
-            return true;
-        }
-
-        $stmt->close();
-        return false;
-    }
+    // Duplicate delete method removed.
 
     // Get products by category ID
     public function getProductsByCategory($category_id) {
@@ -155,5 +157,21 @@ class Product {
         $stmt->close();
         return $products;
     }
-
+    public function delete() {
+        $query = "DELETE FROM {$this->table} WHERE id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $this->id);
+    
+        if ($stmt->execute()) {
+            $stmt->close();
+            return true;
+        }
+    
+        $stmt->close();
+        return false;
+    }
+    // Get size chart (default implementation)
+    public function getSizeChart() {
+        return "Default size chart";
+    }
 }

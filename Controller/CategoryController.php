@@ -60,23 +60,37 @@ class CategoryController {
     // Display the delete category confirmation page
     public function deleteCategoryForm($id) {
         $category = new CategoryComposite();
-        $category->id = $id;
-        $categoryData = $category->getSubcategoryById($id);
+        $categoryData = $category->getCategoryById($id); // Correct method
+    
         include 'C:\xampp\htdocs\ecommerce_master\View\categories\delete_category.php';
     }
+    
 
     // Handle the delete category action
     public function deleteCategory($id) {
         $category = new CategoryComposite();
-        $category->id = $id;
-
-        if ($category->delete()) {
-            header("Location: index.php?controller=Category&action=listCategories");
+    
+        // Check if category exists
+        $categoryData = $category->getCategoryById($id);
+        if (!$categoryData) {
+            die("Error: Category not found.");
+        }
+    
+        // Delete all subcategories first
+        $subcategories = $category->getSubcategories($id);
+        foreach ($subcategories as $subcategory) {
+            $category->deleteById($subcategory['id']);
+        }
+    
+        // Delete category itself
+        if ($category->deleteById($id)) {
+            header("Location: index.php?controller=Category&action=listCategories&message=CategoryDeleted");
             exit();
         } else {
-            echo "Failed to delete category.";
+            die("Error: Failed to delete category.");
         }
     }
+    
 
     public function listCategories() {
         $category = new CategoryComposite();

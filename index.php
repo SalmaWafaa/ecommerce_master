@@ -3,11 +3,13 @@
 // Autoload classes
 spl_autoload_register(function ($class_name) {
     $directories = [
-        'C:/xampp/htdocs/ecommerce_master/Controller/',
-        'C:/xampp/htdocs/ecommerce_master/Model/Products/'
+        __DIR__ . '/Controller/',
+        __DIR__ . '/Model/Products/'
     ];
 
-    $class_name = str_replace('\\', '/', $class_name);
+if (!isset($_SESSION['customer_id'])) {
+    $_SESSION['customer_id'] = 1; // Example: Assign a dummy customer ID for testing
+}
 
     foreach ($directories as $directory) {
         $file = $directory . $class_name . '.php';
@@ -20,8 +22,7 @@ spl_autoload_register(function ($class_name) {
 });
 
 // Database configuration
-require_once  '/config/Database.php';
-require_once 'E:\xampp\htdocs\ecommerce_master\View\order_view.php';
+require_once __DIR__ . '/config/Database.php';
 
 // Get the controller and action from the URL
 $controller = $_GET['controller'] ?? 'Category'; // Default controller
@@ -47,14 +48,14 @@ try {
     // Prepare parameters for the action method
     $params = [];
 
-    // If the action is 'updateProduct', include $_POST data
-    if ($action === 'updateProduct') {
-        $params = [$_GET['id'] ?? null, $_POST];
+    // If the action is 'deleteProduct', pass the product ID
+    if ($action === 'deleteProduct') {
+        $params = [$_GET['id'] ?? null];
     } else {
         // For other actions, pass only the relevant GET parameters
-        $params = array_filter($_GET, function($key) {
+        $params = array_values(array_filter($_GET, function($key) {
             return $key !== 'controller' && $key !== 'action';
-        }, ARRAY_FILTER_USE_KEY);
+        }, ARRAY_FILTER_USE_KEY));
     }
 
     // Call the action method with the prepared parameters
@@ -62,4 +63,3 @@ try {
 } catch (Exception $e) {
     die("Error: " . $e->getMessage());
 }
-
