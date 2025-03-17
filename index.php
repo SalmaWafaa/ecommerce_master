@@ -21,6 +21,7 @@ spl_autoload_register(function ($class_name) {
 
 // Database configuration
 require_once  '/config/Database.php';
+require_once 'E:\xampp\htdocs\ecommerce_master\View\order_view.php';
 
 // Get the controller and action from the URL
 $controller = $_GET['controller'] ?? 'Category'; // Default controller
@@ -61,3 +62,4 @@ try {
 } catch (Exception $e) {
     die("Error: " . $e->getMessage());
 }
+
