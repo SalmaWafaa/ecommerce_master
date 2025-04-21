@@ -1,7 +1,8 @@
 <?php
 
 require_once 'User.php';
-require_once 'C:\xampp\htdocs\ecommerce_master\config\Database.php';
+//require_once 'C:\xampp\htdocs\ecommerce_master\config\Database.php';
+require_once __DIR__ . '/../config/dbConnectionSingelton.php';
 
 class Customer extends User {
     private $db;

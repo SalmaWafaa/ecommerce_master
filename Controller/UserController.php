@@ -2,8 +2,10 @@
 
 //require_once 'C:\xampp\htdocs\ecommerce_master\config\Database.php';
 //require_once 'C:\xampp\htdocs\ecommerce_master\Model\UserFactory.php';
-require_once 'C:\xampp\htdocs\ecommerce_master\config\Database.php';
-require_once 'C:\xampp\htdocs\ecommerce_master\Model\UserFactory.php';
+// require_once 'C:\xampp\htdocs\ecommerce_master\config\Database.php';
+// require_once 'C:\xampp\htdocs\ecommerce_master\Model\UserFactory.php';
+require_once __DIR__ . '/../config/Database.php';
+require_once __DIR__ . '/../Model/UserFactory.php';
 
 class UserController {
     private $db;
