@@ -1,31 +1,3 @@
-<?php
-// Start the session
-session_start();
-
-require_once __DIR__ . '/../Controller/UserController.php';
-
-// Check if the form is submitted
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-
-    // Create a UserController object
-    $userController = new UserController();
-
-    // Attempt to log in
-    $result = $userController->login($email, $password);
-
-    if ($result === true) {
-        // Login successful, redirect to home.php
-        header("Location: home.php");
-        exit();
-    } else {
-        // Display the error message
-        echo "Login failed: " . $result;
-    }
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -82,13 +54,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <div class="login-form">
         <h2>Login</h2>
-        <?php if (isset($result) && $result !== true): ?>
-            <div class="error"><?php echo $result; ?></div>
-        <?php endif; ?>
-        <form method="POST" action="">
+        <form action="../Controller/UserController.php?action=login" method="POST">
             <input type="email" name="email" placeholder="Email" required><br>
             <input type="password" name="password" placeholder="Password" required><br>
-
             <button type="submit">Login</button>
         </form>
         <p style="text-align: center; margin-top: 10px;">

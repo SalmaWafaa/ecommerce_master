@@ -169,11 +169,11 @@
 <div class="header">
     <h1>HomePage</h1>
     <div class="auth-buttons">
-        <a href="http://localhost/ecommerce_master/View/login.php
+        <a href="http://localhost/ecommerce_master2/View/login.php
 ">
             <button class="login-button">Login</button>
         </a>
-        <a href="http://localhost/ecommerce_master/View/register.php"
+        <a href="http://localhost/ecommerce_master2/View/register.php"
 >
             <button class="register-button">Register</button>
         </a>
