@@ -4,12 +4,10 @@ require_once __DIR__ . '/../Model/UserFactory.php';
 
 class UserController {
     private $db;
-    private $userFactory;
 
     public function __construct() {
         $database = DatabaseConnection::getInstance();
         $this->db = $database->getConnection();
-        $this->userFactory = new UserFactory();
     }
 
     public function register($type, $firstName, $lastName, $email, $password) {
@@ -48,14 +46,14 @@ class UserController {
             $row = $result->fetch_assoc();
             if (password_verify($password, $row['password'])) {
                 $userType = ($row['user_type_id'] == 1) ? 'admin' : 'customer';
-                $user = $this->userFactory->createUser($userType, $row['id'], $row['first_name'], $row['last_name'], $row['email'], $row['password']);
+                $user = UserFactory::createUser($userType, $row['id'], $row['first_name'], $row['last_name'], $row['email'], $row['password']);
     
                 session_start();
                 $_SESSION['user_id'] = $row['id'];
                 $_SESSION['user_type'] = $userType;
                 $_SESSION['email'] = $row['email'];
     
-                return true; // ✅ return success
+                return true;
             }
         }
     
@@ -111,7 +109,7 @@ class UserController {
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             $userType = ($row['user_type_id'] == 1) ? 'admin' : 'customer';
-            $user = $this->userFactory->createUser($userType, $row['id'], $row['first_name'], $row['last_name'], $row['email'], $row['password']);
+            $user = UserFactory::createUser($userType, $row['id'], $row['first_name'], $row['last_name'], $row['email'], $row['password']);
 
             // Update user details
             $user->editAccount();

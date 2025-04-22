@@ -8,6 +8,7 @@ abstract class User
     protected $lastName;
     protected $email;
     protected $password;
+    protected $db;
 
     public function __construct($id, $firstName, $lastName, $email, $password) 
     {
@@ -16,6 +17,7 @@ abstract class User
         $this->lastName = $lastName;
         $this->email = $email;
         $this->password = $password;
+        $this->db = DatabaseConnection::getInstance()->getConnection();
     }
 
     // Setter for ID

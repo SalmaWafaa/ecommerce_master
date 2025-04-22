@@ -4,6 +4,11 @@ require_once __DIR__ . '/../config/dbConnectionSingelton.php';
 
 class Admin extends User 
 {
+    public function __construct($id = null, $firstName = null, $lastName = null, $email = null, $password = null) 
+    {
+        parent::__construct($id, $firstName, $lastName, $email, $password);
+    }
+
     public function login() 
     {
         $query = "SELECT * FROM users WHERE email = ? AND user_type_id = 1";
