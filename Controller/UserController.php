@@ -77,6 +77,10 @@ class UserController {
             }
         }
     }
+    public function isLoggedIn() {
+        // Example logic to check if a user is logged in
+        return isset($_SESSION['user_id']);
+    }
     
  
     public function handleRegistrationRequest() {
@@ -140,4 +144,3 @@ if (isset($_GET['action'])) {
             break;
     }
 }
-
