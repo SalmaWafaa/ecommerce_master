@@ -1,8 +1,4 @@
 <?php
-<<<<<<< HEAD
-
-=======
->>>>>>> a7ff493ccf16dd71beed32ca7dc8994bf1c18bce
 // Autoload classes
 spl_autoload_register(function ($class_name) {
     $directories = [
@@ -65,9 +61,6 @@ try {
     call_user_func_array([$controllerInstance, $action], $params);
 } catch (Exception $e) {
     die("Error: " . $e->getMessage());
-<<<<<<< HEAD
-}
-=======
 }
 
 // session_start();
@@ -153,4 +146,3 @@ try {
 // } catch (Exception $e) {
 //     die("Error: " . $e->getMessage());
 // }
->>>>>>> a7ff493ccf16dd71beed32ca7dc8994bf1c18bce

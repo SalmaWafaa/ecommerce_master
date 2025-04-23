@@ -17,7 +17,7 @@ abstract class User
         $this->lastName = $lastName;
         $this->email = $email;
         $this->password = $password;
-        $this->db = DatabaseConnection::getInstance()->getConnection();
+        $this->db = Database::getInstance()->getConnection();
     }
 
     // Setter for ID

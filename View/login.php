@@ -1,11 +1,10 @@
-<<<<<<< HEAD
 <?php
 // Start the session
 session_start();
 
 // Include the UserController class
 // require_once __DIR__ . '/../../Controller/UserController.php';
-require_once 'C:\xampp\htdocs\ecommerce_master\Controller\UserController.php';
+require_once __DIR__ . '/../Controller/UserController.php';
 
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -29,8 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
-=======
->>>>>>> a7ff493ccf16dd71beed32ca7dc8994bf1c18bce
 <!DOCTYPE html>
 <html lang="en">
 <head>

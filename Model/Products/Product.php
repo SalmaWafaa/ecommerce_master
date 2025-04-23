@@ -18,13 +18,8 @@ class Product {
     public $quantity;
 
     // Constructor with database connection
-<<<<<<< HEAD
     public function __construct() {
         $database = Database::getInstance();
-=======
-    public function __construct($data = []) {
-        $database = new Database();
->>>>>>> a7ff493ccf16dd71beed32ca7dc8994bf1c18bce
         $this->conn = $database->getConnection();
 
         // Initialize properties if data is provided
@@ -86,11 +81,6 @@ class Product {
     
         return false;
     }
-<<<<<<< HEAD
-    
-=======
-
->>>>>>> a7ff493ccf16dd71beed32ca7dc8994bf1c18bce
     // Read all products
     public function read() {
         $query = "SELECT * FROM {$this->table}";
@@ -147,11 +137,10 @@ class Product {
     public function getProductsByCategory($category_id) {
         $query = "SELECT * FROM {$this->table} WHERE category_id = ?";
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("i", $category_id);
+        $stmt->bindValue(1, $category_id, PDO::PARAM_INT);
         $stmt->execute();
-        $result = $stmt->get_result();
-        $products = $result->fetch_all(MYSQLI_ASSOC);
-        $stmt->close();
+        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
         return $products;
     }
     public function delete() {
@@ -167,22 +156,8 @@ class Product {
         $stmt->closeCursor();
         return false;
     }
-<<<<<<< HEAD
-
-    // Get products by category ID
-    public function getProductsByCategory($category_id) {
-        $query = "SELECT * FROM {$this->table} WHERE category_id = ?";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindValue(1, $category_id, PDO::PARAM_INT);
-        $stmt->execute();
-    
-        // Fetch results
-        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $products;
-=======
     // Get size chart (default implementation)
     public function getSizeChart() {
         return "Default size chart";
->>>>>>> a7ff493ccf16dd71beed32ca7dc8994bf1c18bce
     }
 }

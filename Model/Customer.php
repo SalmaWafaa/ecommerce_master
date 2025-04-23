@@ -1,28 +1,30 @@
 <?php
-<<<<<<< HEAD
 
 require_once 'User.php';
 require_once __DIR__ . '/../config/dbConnectionSingelton.php';
-=======
-require_once __DIR__ . '/User.php';
->>>>>>> a7ff493ccf16dd71beed32ca7dc8994bf1c18bce
 
 class Customer extends User {
     public function __construct($id = null, $firstName = null, $lastName = null, $email = null, $password = null) {
         parent::__construct($id, $firstName, $lastName, $email, $password);
+        $this->db = Database::getInstance()->getConnection(); // Initialize the database connection
     }
-    
+
     public function login() {
         $query = "SELECT * FROM users WHERE email = ? AND user_type_id = 2";
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param("s", $this->email);
-        $stmt->execute();
-        $result = $stmt->get_result();
 
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
+        if ($stmt === false) {
+            throw new Exception("Failed to prepare statement.");
+        }
+
+        // Bind parameters using PDO's bindValue method
+        $stmt->bindValue(1, $this->email, PDO::PARAM_STR);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);  // Fetch the result as an associative array
+
+        if ($row) {
             if (password_verify($this->password, $row['password'])) {
-                // Update object properties
+                // Update object properties with the data retrieved from the database
                 $this->id = $row['id'];
                 $this->firstName = $row['first_name'];
                 $this->lastName = $row['last_name'];
@@ -37,7 +39,13 @@ class Customer extends User {
         $query = "INSERT INTO users (first_name, last_name, email, password, user_type_id) 
                   VALUES (?, ?, ?, ?, 2)";
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param("ssss", $this->firstName, $this->lastName, $this->email, $hashedPassword);
+
+        // Bind parameters using PDO's bindValue method
+        $stmt->bindValue(1, $this->firstName, PDO::PARAM_STR);
+        $stmt->bindValue(2, $this->lastName, PDO::PARAM_STR);
+        $stmt->bindValue(3, $this->email, PDO::PARAM_STR);
+        $stmt->bindValue(4, $hashedPassword, PDO::PARAM_STR);
+
         return $stmt->execute();
     }
 
@@ -50,13 +58,14 @@ class Customer extends User {
                   password = ? 
                   WHERE id = ? AND user_type_id = 2";
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param("ssssi", 
-            $this->firstName, 
-            $this->lastName, 
-            $this->email, 
-            $hashedPassword, 
-            $this->id
-        );
+
+        // Bind parameters using PDO's bindValue method
+        $stmt->bindValue(1, $this->firstName, PDO::PARAM_STR);
+        $stmt->bindValue(2, $this->lastName, PDO::PARAM_STR);
+        $stmt->bindValue(3, $this->email, PDO::PARAM_STR);
+        $stmt->bindValue(4, $hashedPassword, PDO::PARAM_STR);
+        $stmt->bindValue(5, $this->id, PDO::PARAM_INT);
+
         return $stmt->execute();
     }
 }
