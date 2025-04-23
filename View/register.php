@@ -1,8 +1,51 @@
+<<<<<<< HEAD
+<?php
+// Start the session
+session_start();
+
+// Include the UserController class
+// require_once __DIR__ . '/../../Controller/UserController.php';
+require_once 'C:\xampp\htdocs\ecommerce_master\Controller\UserController.php';
+
+// Check if the form is submitted
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $type = $_POST['type'];
+    $firstName = $_POST['firstName'];
+    $lastName = $_POST['lastName'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    // Create a UserController object
+    $userController = new UserController();
+
+    // Attempt to register the user
+    $result = $userController->register($type, $firstName, $lastName, $email, $password);
+
+    if ($result === true) {
+        // Registration successful, redirect to home.php
+        header("index.php");
+        exit();
+    } else {
+        // Display the error message
+        echo "Registration failed: " . $result;
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+=======
         <!DOCTYPE html>
         <html>
         <head>
             <title>Register</title>
             <style>
+>>>>>>> a7ff493ccf16dd71beed32ca7dc8994bf1c18bce
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;

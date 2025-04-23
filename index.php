@@ -1,14 +1,18 @@
 <?php
+<<<<<<< HEAD
+
+=======
+>>>>>>> a7ff493ccf16dd71beed32ca7dc8994bf1c18bce
 // Autoload classes
 spl_autoload_register(function ($class_name) {
     $directories = [
         __DIR__ . '/Controller/',
-        __DIR__ . '/Model/Products/'
+        __DIR__ . '/Model/Products/',
+        __DIR__ . '/Controller/Cart/',
+            
     ];
 
-if (!isset($_SESSION['customer_id'])) {
-    $_SESSION['customer_id'] = 1; // Example: Assign a dummy customer ID for testing
-}
+    $class_name = str_replace('\\', '/', $class_name);
 
     foreach ($directories as $directory) {
         $file = $directory . $class_name . '.php';
@@ -21,7 +25,7 @@ if (!isset($_SESSION['customer_id'])) {
 });
 
 // Database configuration
-require_once __DIR__ . '/config/Database.php';
+require_once __DIR__ . '/config/dbConnectionSingelton.php';
 
 // Get the controller and action from the URL
 $controller = $_GET['controller'] ?? 'Category'; // Default controller
@@ -61,6 +65,9 @@ try {
     call_user_func_array([$controllerInstance, $action], $params);
 } catch (Exception $e) {
     die("Error: " . $e->getMessage());
+<<<<<<< HEAD
+}
+=======
 }
 
 // session_start();
@@ -146,3 +153,4 @@ try {
 // } catch (Exception $e) {
 //     die("Error: " . $e->getMessage());
 // }
+>>>>>>> a7ff493ccf16dd71beed32ca7dc8994bf1c18bce

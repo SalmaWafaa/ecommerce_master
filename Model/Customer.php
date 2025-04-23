@@ -1,5 +1,11 @@
 <?php
+<<<<<<< HEAD
+
+require_once 'User.php';
+require_once __DIR__ . '/../config/dbConnectionSingelton.php';
+=======
 require_once __DIR__ . '/User.php';
+>>>>>>> a7ff493ccf16dd71beed32ca7dc8994bf1c18bce
 
 class Customer extends User {
     public function __construct($id = null, $firstName = null, $lastName = null, $email = null, $password = null) {

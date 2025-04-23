@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../../config/Database.php';
+require_once __DIR__ . '/../../config/dbConnectionSingelton.php';
 require_once __DIR__ . '/ICategory.php';
 
 class CategoryComposite implements ICategory {
@@ -16,7 +16,7 @@ class CategoryComposite implements ICategory {
 
     public function __construct() {
         $dbConnection = Database::getInstance();
-        $this->conn = $dbConnection->getConnection();
+        $this->conn = $dbConnection->getConnection(); // Must return a PDO instance
     }
 
     public function getId(): int {
@@ -35,10 +35,8 @@ class CategoryComposite implements ICategory {
         if ($this->parent_id) {
             $query = "SELECT * FROM {$this->table} WHERE id = ?";
             $stmt = $this->conn->prepare($query);
-            $stmt->bind_param("i", $this->parent_id);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $parentData = $result->fetch_assoc();
+            $stmt->execute([$this->parent_id]);
+            $parentData = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($parentData) {
                 $parentCategory = new CategoryComposite();
@@ -51,29 +49,25 @@ class CategoryComposite implements ICategory {
         }
         return null;
     }
+
     public function getMainCategories() {
-        $query = "SELECT * FROM categories WHERE parent_id IS NULL";
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        return $result->fetch_all(MYSQLI_ASSOC);
+        $query = "SELECT * FROM {$this->table} WHERE parent_id IS NULL";
+        $stmt = $this->conn->query($query);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
     public function getSubcategories($parent_id) {
-        $query = "SELECT * FROM categories WHERE parent_id = ?";
+        $query = "SELECT * FROM {$this->table} WHERE parent_id = ?";
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("i", $parent_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        return $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->execute([$parent_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getProducts(): array {
         $query = "SELECT * FROM products WHERE category_id = ?";
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("i", $this->id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        return $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->execute([$this->id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function addProduct($product): void {
@@ -117,43 +111,38 @@ class CategoryComposite implements ICategory {
     public function save(): bool {
         $query = "INSERT INTO {$this->table} (name, image, parent_id) VALUES (?, ?, ?)";
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("ssi", $this->name, $this->image, $this->parent_id);
-        return $stmt->execute();
+        return $stmt->execute([$this->name, $this->image, $this->parent_id]);
     }
 
     public function update(): bool {
         $query = "UPDATE {$this->table} SET name = ?, image = ?, parent_id = ? WHERE id = ?";
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("ssii", $this->name, $this->image, $this->parent_id, $this->id);
-        return $stmt->execute();
+        return $stmt->execute([$this->name, $this->image, $this->parent_id, $this->id]);
     }
 
     public function delete(): bool {
         $query = "DELETE FROM {$this->table} WHERE id = ?";
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("i", $this->id);
-        return $stmt->execute();
+        return $stmt->execute([$this->id]);
     }
+
     public function getCategoryById($id) {
         $query = "SELECT * FROM {$this->table} WHERE id = ?";
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        return $result->fetch_assoc();
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
     public function deleteById($id): bool {
-        // Delete all associated products first
-        $deleteProductsQuery = "DELETE FROM products WHERE category_id = ?";
-        $stmt = $this->conn->prepare($deleteProductsQuery);
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-    
-        // Now delete the category
-        $deleteQuery = "DELETE FROM {$this->table} WHERE id = ?";
-        $stmt = $this->conn->prepare($deleteQuery);
-        $stmt->bind_param("i", $id);
-        return $stmt->execute();
+        $this->conn->beginTransaction();
+        try {
+            $this->conn->prepare("DELETE FROM products WHERE category_id = ?")->execute([$id]);
+            $this->conn->prepare("DELETE FROM {$this->table} WHERE id = ?")->execute([$id]);
+            $this->conn->commit();
+            return true;
+        } catch (PDOException $e) {
+            $this->conn->rollBack();
+            return false;
+        }
     }
-    
 }

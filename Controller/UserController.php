@@ -1,6 +1,15 @@
 <?php
+<<<<<<< HEAD
+
+//require_once 'C:\xampp\htdocs\ecommerce_master\config\Database.php';
+//require_once 'C:\xampp\htdocs\ecommerce_master\Model\UserFactory.php';
+require_once __DIR__ . '/../config/dbConnectionSingelton.php';
+
+require_once 'C:\xampp\htdocs\ecommerce_master\Model\UserFactory.php';
+=======
 require_once __DIR__ . '/../config/dbConnectionSingelton.php';
 require_once __DIR__ . '/../Model/UserFactory.php';
+>>>>>>> a7ff493ccf16dd71beed32ca7dc8994bf1c18bce
 
 class UserController {
     private $db;
@@ -13,6 +22,50 @@ class UserController {
     public function register($type, $firstName, $lastName, $email, $password) {
         $query = "SELECT id FROM users WHERE email = ?";
         $stmt = $this->db->prepare($query);
+<<<<<<< HEAD
+        $stmt->execute([$email]);
+    
+        if ($stmt->rowCount() > 0) {
+            return "Email already registered. Please use a different email.";
+        }
+    
+        // Hash the password
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+    
+        // Map user type to user_type_id
+        $userTypeId = ($type == 'admin') ? 1 : 2;
+    
+        // Save the user to the database
+        $query = "INSERT INTO users (first_name, last_name, email, password, user_type_id) VALUES (?, ?, ?, ?, ?)";
+        $stmt = $this->db->prepare($query);
+        
+        if ($stmt->execute([$firstName, $lastName, $email, $hashedPassword, $userTypeId])) {
+            header("Location: ../index.php");
+            exit();
+        } else {
+            return "SQL Error: " . implode(", ", $stmt->errorInfo());
+        }
+    }
+    
+
+    public function login($email, $password) {
+        $query = "SELECT * FROM users WHERE email = ?";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([$email]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+        if ($row && password_verify($password, $row['password'])) {
+            $userType = ($row['user_type_id'] == 1) ? 'admin' : 'customer';
+            $user = $this->userFactory->createUser($userType, $row['id'], $row['first_name'], $row['last_name'], $row['email'], $row['password']);
+    
+            session_start();
+            $_SESSION['user_id'] = $row['id'];
+            $_SESSION['user_type'] = $userType;
+            $_SESSION['email'] = $row['email'];
+    
+            header("Location: ../index.php");
+            exit();
+=======
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $stmt->store_result();
@@ -55,11 +108,14 @@ class UserController {
     
                 return true;
             }
+>>>>>>> a7ff493ccf16dd71beed32ca7dc8994bf1c18bce
         }
     
         return "Invalid email or password.";
     }
     
+<<<<<<< HEAD
+=======
     public function handleLoginRequest() {
         session_start();
     
@@ -102,6 +158,7 @@ class UserController {
         }
     }
     
+>>>>>>> a7ff493ccf16dd71beed32ca7dc8994bf1c18bce
     public function editAccount($userId, $firstName, $lastName, $email, $password) {
         // Validate input
         if (empty($firstName) || empty($lastName) || empty($email)) {
@@ -113,17 +170,24 @@ class UserController {
         $stmt = $this->db->prepare($query);
         $stmt->bind_param("i", $userId);
         $stmt->execute();
-        $result = $stmt->get_result();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+<<<<<<< HEAD
+        // if ($result->num_rows > 0) {
+        //     $row = $result->fetch_assoc();
+        //     $userType = ($row['user_type_id'] == 1) ? 'admin' : 'customer';
+        //     $user = $this->userFactory->createUser($userType, $row['id'], $row['first_name'], $row['last_name'], $row['email'], $row['password']);
+=======
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             $userType = ($row['user_type_id'] == 1) ? 'admin' : 'customer';
             $user = UserFactory::createUser($userType, $row['id'], $row['first_name'], $row['last_name'], $row['email'], $row['password']);
+>>>>>>> a7ff493ccf16dd71beed32ca7dc8994bf1c18bce
 
-            // Update user details
-            $user->editAccount();
-            return true;
-        }
+        //     // Update user details
+        //     $user->editAccount();
+        //     return true;
+        // }
 
         return false;
     }
