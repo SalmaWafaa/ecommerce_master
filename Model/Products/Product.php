@@ -3,8 +3,8 @@
 require_once __DIR__ . '/../../config/dbConnectionSingelton.php';
 
 class Product {
-    private $conn;
-    private $table = 'products';
+    protected $conn;
+    protected $table = 'products';
 
     // Product properties
     public $id;
@@ -18,9 +18,27 @@ class Product {
     public $quantity;
 
     // Constructor with database connection
+<<<<<<< HEAD
     public function __construct() {
         $database = Database::getInstance();
+=======
+    public function __construct($data = []) {
+        $database = new Database();
+>>>>>>> a7ff493ccf16dd71beed32ca7dc8994bf1c18bce
         $this->conn = $database->getConnection();
+
+        // Initialize properties if data is provided
+        if (!empty($data)) {
+            $this->id = $data['id'] ?? null;
+            $this->name = $data['name'] ?? '';
+            $this->category_id = $data['category_id'] ?? '';
+            $this->product_type_id = $data['product_type_id'] ?? '';
+            $this->description = $data['description'] ?? '';
+            $this->price = $data['price'] ?? 0;
+            $this->on_sale = $data['on_sale'] ?? 0;
+            $this->rate = $data['rate'] ?? 0;
+            $this->quantity = $data['quantity'] ?? 0;
+        }
     }
 
     // Create a new product
@@ -68,7 +86,11 @@ class Product {
     
         return false;
     }
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> a7ff493ccf16dd71beed32ca7dc8994bf1c18bce
     // Read all products
     public function read() {
         $query = "SELECT * FROM {$this->table}";
@@ -119,6 +141,19 @@ class Product {
     }
 
     // Delete a product
+    // Duplicate delete method removed.
+
+    // Get products by category ID
+    public function getProductsByCategory($category_id) {
+        $query = "SELECT * FROM {$this->table} WHERE category_id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("i", $category_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $products = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+        return $products;
+    }
     public function delete() {
         $query = "DELETE FROM {$this->table} WHERE id = ?";
         $stmt = $this->conn->prepare($query);
@@ -132,6 +167,7 @@ class Product {
         $stmt->closeCursor();
         return false;
     }
+<<<<<<< HEAD
 
     // Get products by category ID
     public function getProductsByCategory($category_id) {
@@ -143,5 +179,10 @@ class Product {
         // Fetch results
         $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $products;
+=======
+    // Get size chart (default implementation)
+    public function getSizeChart() {
+        return "Default size chart";
+>>>>>>> a7ff493ccf16dd71beed32ca7dc8994bf1c18bce
     }
 }

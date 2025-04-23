@@ -1,15 +1,18 @@
 <?php
 
-require_once 'C:\xampp\htdocs\ecommerce_master\Model\Category\CategoryComposite.php';
+// require_once 'C:\xampp\htdocs\ecommerce_master\Model\Category\CategoryComposite.php';
+require_once './Model\Category\CategoryComposite.php';
 
 class CategoryController {
     // Display the add category form
     public function addCategoryForm() {
-        include 'C:\xampp\htdocs\ecommerce_master\View\categories\add_category.php';
+       // include 'C:\xampp\htdocs\ecommerce_master2\View\categories\add_category.php';
+        include __DIR__ . '/../View/categories/add_category.php';
     }
 
     // Handle the add category form submission
-    public function createCategory() {
+    public function createCategory() 
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $category = new CategoryComposite();
             $category->name = $_POST['name'];
@@ -29,14 +32,16 @@ class CategoryController {
         $products = $product->getProductsByCategory($subcategory_id);
 
         // Include the view file to display products
-        include 'C:\xampp\htdocs\ecommerce_master\View\categories\subcategory_products.php';
+        // include 'C:\xampp\htdocs\ecommerce_master2\View\categories\subcategory_products.php';
+        include __DIR__ . '/../View/categories/subcategory_products.php';
     }
     // Display the edit category form
     public function editCategoryForm($id) {
         $category = new CategoryComposite();
         $category->id = $id;
         $categoryData = $category->getSubcategoryById($id);
-        include 'C:\xampp\htdocs\ecommerce_master\View\categories\edit_category.php';
+        //include 'C:\xampp\htdocs\ecommerce_master2\View\categories\edit_category.php';
+        include __DIR__ . '/../View/categories/edit_category.php';
     }
 
     // Handle the edit category form submission
@@ -62,7 +67,8 @@ class CategoryController {
         $category = new CategoryComposite();
         $categoryData = $category->getCategoryById($id); // Correct method
     
-        include 'C:\xampp\htdocs\ecommerce_master\View\categories\delete_category.php';
+        // include 'C:\xampp\htdocs\ecommerce_master2\View\categories\delete_category.php';
+        include __DIR__ . '/../View/categories/delete_category.php';
     }
     
 
@@ -98,10 +104,9 @@ class CategoryController {
         // Fetch main categories (Male and Female)
         $mainCategories = $category->getMainCategories();
     
-        // Debugging: Print fetched main categories
-        echo "<pre>";
-        print_r($mainCategories);
-        echo "</pre>";
+        // echo "<pre>";
+        // print_r($mainCategories);
+        // echo "</pre>";
     
         // Fetch subcategories for each main category
         foreach ($mainCategories as &$mainCategory) {
@@ -109,7 +114,8 @@ class CategoryController {
         }
     
         // Include the view file to display categories
-        include 'C:\xampp\htdocs\ecommerce_master\View\categories\category_list.php';
+        // include 'C:\xampp\htdocs\ecommerce_master2\View\categories\category_list.php';
+        include __DIR__ . '/../View/categories/category_list.php';
     }
 
     // public function listMaleCategories() {

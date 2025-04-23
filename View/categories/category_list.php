@@ -1,3 +1,17 @@
+<?php
+// Start the session
+session_start();
+
+// Include the UserController class
+require_once 'C:\xampp\htdocs\ecommerce_master\Controller\UserController.php';
+
+// Create an instance of UserController
+$userController = new UserController();
+
+// Check if the user is logged in
+$isLoggedIn = $userController->isLoggedIn();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -169,16 +183,15 @@
 <div class="header">
     <h1>HomePage</h1>
     <div class="auth-buttons">
-        <a href="http://localhost/ecommerce_master/View/login.php
+        <a href="http://localhost/ecommerce_master2/View/login.php
 ">
             <button class="login-button">Login</button>
         </a>
-        <a href="http://localhost/ecommerce_master/View/register.php"
+        <a href="http://localhost/ecommerce_master2/View/register.php"
 >
             <button class="register-button">Register</button>
         </a>
     </div>
-</div>
 
     <div class="container">
         <h1>Categories</h1>

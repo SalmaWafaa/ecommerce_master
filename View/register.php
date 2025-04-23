@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 // Start the session
 session_start();
@@ -38,6 +39,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     <style>
+=======
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Register</title>
+            <style>
+>>>>>>> a7ff493ccf16dd71beed32ca7dc8994bf1c18bce
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
@@ -59,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             text-align: center;
         }
         .register-form input {
-            width: 100%;
+            width: 90%;
             padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
@@ -83,30 +91,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             margin-bottom: 15px;
         }
     </style>
-</head>
-<body>
-    <div class="register-form">
-        <h2>Register</h2>
-        <?php if (isset($result) && $result !== true): ?>
-            <div class="error"><?php echo $result; ?></div>
-        <?php endif; ?>
-        <form method="POST" action="">
-            <label for="type">User Type:</label>
-            <select name="type" id="type">
-                <option value="admin">Admin</option>
-                <option value="customer">Customer</option>
-            </select><br>
-
-            <input type="text" name="firstName" placeholder="First Name" required><br>
-            <input type="text" name="lastName" placeholder="Last Name" required><br>
-            <input type="email" name="email" placeholder="Email" required><br>
-            <input type="password" name="password" placeholder="Password" required><br>
-
-            <button type="submit">Register</button>
-        </form>
-        <p style="text-align: center; margin-top: 10px;">
-            Already have an account? <a href="login.php">Login here</a>
-        </p>
-    </div>
-</body>
-</html>
+        </head>
+        <body>
+            <div class="register-form">
+                <h2>Register</h2>
+                <form action="../Controller/UserController.php?action=register" method="POST">
+                    <select name="type">
+                        <option value="customer">Customer</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                    <input type="text" name="firstName" placeholder="First Name"required>
+                    <input type="text" name="lastName" placeholder="Last Name"required>
+                    <input type="email" name="email" placeholder="Email"required>
+                    <input type="password" name="password" placeholder="Password"required>
+                    <button type="submit">Register</button>
+                </form>
+                <p style="text-align: center; margin-top: 10px;">
+                Already have an account?  <a href="?controller=User&action=showLogin">Login</a>
+            </div>
+        </body>
+        </html>

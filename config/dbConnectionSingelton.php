@@ -3,10 +3,19 @@ class Database {
     private static $instance = null;
     private $connection;
 
+<<<<<<< HEAD
     private $host = 'localhost';
     private $dbname = 'swe_master';
     private $username = 'root';
     private $password = '';
+=======
+    private function __construct() {
+        $this->connection = new mysqli("localhost", "root", "", "swe_master");
+        
+        if ($this->connection->connect_error) {
+            throw new Exception("Database Connection Failed: " . $this->connection->connect_error);
+        }
+>>>>>>> a7ff493ccf16dd71beed32ca7dc8994bf1c18bce
 
     private function __construct() {
         try {

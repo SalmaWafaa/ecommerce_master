@@ -5,6 +5,10 @@ require_once 'Admin.php';
 require_once 'Customer.php';
 
 class UserFactory {
+    private function __construct() {
+        // Private constructor to prevent instantiation
+    }
+
     public static function createUser($type, $id, $firstName, $lastName, $email, $password) {
         switch ($type) {
             case 'admin':

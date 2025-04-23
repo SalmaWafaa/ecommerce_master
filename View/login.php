@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 // Start the session
 session_start();
@@ -28,6 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
+=======
+>>>>>>> a7ff493ccf16dd71beed32ca7dc8994bf1c18bce
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -84,13 +87,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <div class="login-form">
         <h2>Login</h2>
-        <?php if (isset($result) && $result !== true): ?>
-            <div class="error"><?php echo $result; ?></div>
-        <?php endif; ?>
-        <form method="POST" action="">
+        <form action="../Controller/UserController.php?action=login" method="POST">
             <input type="email" name="email" placeholder="Email" required><br>
             <input type="password" name="password" placeholder="Password" required><br>
-
             <button type="submit">Login</button>
         </form>
         <p style="text-align: center; margin-top: 10px;">

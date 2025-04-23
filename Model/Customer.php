@@ -1,21 +1,19 @@
 <?php
+<<<<<<< HEAD
 
 require_once 'User.php';
 require_once __DIR__ . '/../config/dbConnectionSingelton.php';
+=======
+require_once __DIR__ . '/User.php';
+>>>>>>> a7ff493ccf16dd71beed32ca7dc8994bf1c18bce
 
 class Customer extends User {
-    private $db;
-
-    public function __construct($id, $firstName, $lastName, $email, $password) {
+    public function __construct($id = null, $firstName = null, $lastName = null, $email = null, $password = null) {
         parent::__construct($id, $firstName, $lastName, $email, $password);
-        $database = Database::getInstance();
-        $this->db = $database->getConnection();
     }
-
-    // Implementation of abstract methods from the User class
+    
     public function login() {
-        // Check if the customer exists in the database
-        $query = "SELECT * FROM users WHERE email = ? AND user_type_id = 2"; // Assuming 2 is the customer type
+        $query = "SELECT * FROM users WHERE email = ? AND user_type_id = 2";
         $stmt = $this->db->prepare($query);
         $stmt->bind_param("s", $this->email);
         $stmt->execute();
@@ -24,7 +22,7 @@ class Customer extends User {
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             if (password_verify($this->password, $row['password'])) {
-                // Set customer details
+                // Update object properties
                 $this->id = $row['id'];
                 $this->firstName = $row['first_name'];
                 $this->lastName = $row['last_name'];
@@ -35,36 +33,100 @@ class Customer extends User {
     }
 
     public function register() {
-        // Hash the password
         $hashedPassword = password_hash($this->password, PASSWORD_BCRYPT);
-
-        // Insert the customer into the database
-        $query = "INSERT INTO users (first_name, last_name, email, password, user_type_id) VALUES (?, ?, ?, ?, 2)";
+        $query = "INSERT INTO users (first_name, last_name, email, password, user_type_id) 
+                  VALUES (?, ?, ?, ?, 2)";
         $stmt = $this->db->prepare($query);
         $stmt->bind_param("ssss", $this->firstName, $this->lastName, $this->email, $hashedPassword);
-
         return $stmt->execute();
     }
 
-    // Method to fetch customer details by ID
-    public function getCustomerById() {
-        $query = "SELECT * FROM users WHERE id = ?";
-        $stmt = $this->db->prepare($query);
-        $stmt->bind_param("i", $this->id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        return $result->fetch_assoc();
-    }
-
-    // Method to update customer details
     public function editAccount() {
-        $query = "UPDATE users SET first_name = ?, last_name = ?, email = ?, password = ? WHERE id = ?";
+        $hashedPassword = password_hash($this->password, PASSWORD_BCRYPT);
+        $query = "UPDATE users SET 
+                  first_name = ?, 
+                  last_name = ?, 
+                  email = ?, 
+                  password = ? 
+                  WHERE id = ? AND user_type_id = 2";
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param("ssssi", $this->firstName, $this->lastName, $this->email, $this->password, $this->id);
-
+        $stmt->bind_param("ssssi", 
+            $this->firstName, 
+            $this->lastName, 
+            $this->email, 
+            $hashedPassword, 
+            $this->id
+        );
         return $stmt->execute();
     }
+}
+
+
+// require_once 'User.php';
+// require_once __DIR__ . '/../config/dbConnectionSingelton.php';
+
+// class Customer extends User {
+//     private $db;
+
+//     public function __construct($id, $firstName, $lastName, $email, $password) {
+//         parent::__construct($id, $firstName, $lastName, $email, $password);
+//         $database = Database::getInstance();
+//         $this->db = $database->getConnection();
+//     }
+
+//     // Implementation of abstract methods from the User class
+//     public function login() {
+//         // Check if the customer exists in the database
+//         $query = "SELECT * FROM users WHERE email = ? AND user_type_id = 2"; // Assuming 2 is the customer type
+//         $stmt = $this->db->prepare($query);
+//         $stmt->bind_param("s", $this->email);
+//         $stmt->execute();
+//         $result = $stmt->get_result();
+
+//         if ($result->num_rows > 0) {
+//             $row = $result->fetch_assoc();
+//             if (password_verify($this->password, $row['password'])) {
+//                 // Set customer details
+//                 $this->id = $row['id'];
+//                 $this->firstName = $row['first_name'];
+//                 $this->lastName = $row['last_name'];
+//                 return true;
+//             }
+//         }
+//         return false;
+//     }
+
+//     public function register() {
+//         // Hash the password
+//         $hashedPassword = password_hash($this->password, PASSWORD_BCRYPT);
+
+//         // Insert the customer into the database
+//         $query = "INSERT INTO users (first_name, last_name, email, password, user_type_id) VALUES (?, ?, ?, ?, 2)";
+//         $stmt = $this->db->prepare($query);
+//         $stmt->bind_param("ssss", $this->firstName, $this->lastName, $this->email, $hashedPassword);
+
+//         return $stmt->execute();
+//     }
+
+//     // Method to fetch customer details by ID
+//     public function getCustomerById() {
+//         $query = "SELECT * FROM users WHERE id = ?";
+//         $stmt = $this->db->prepare($query);
+//         $stmt->bind_param("i", $this->id);
+//         $stmt->execute();
+//         $result = $stmt->get_result();
+
+//         return $result->fetch_assoc();
+//     }
+
+//     // Method to update customer details
+//     public function editAccount() {
+//         $query = "UPDATE users SET first_name = ?, last_name = ?, email = ?, password = ? WHERE id = ?";
+//         $stmt = $this->db->prepare($query);
+//         $stmt->bind_param("ssssi", $this->firstName, $this->lastName, $this->email, $this->password, $this->id);
+
+//         return $stmt->execute();
+//     }
 
     // // Customer-specific methods
     // public function addOrder($order) {
@@ -163,4 +225,6 @@ class Customer extends User {
 
     //     return $stmt->execute();
     // }
-}
+//}
+
+

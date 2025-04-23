@@ -1,29 +1,36 @@
+
 <?php
 
-require_once 'C:\xampp\htdocs\ecommerce_master\Model\Products\Product.php';
+require_once 'C:\xampp\htdocs\ecommerce_master\Model\Products\ProductFactory.php';
 
 class ProductController {
     public function addProductForm() {
         include 'C:\xampp\htdocs\ecommerce_master\View\products\add_product_form.php';
     }
-    // Create a product
+
     public function createProduct() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $product = new Product();
-            $product->name = $_POST['name'];
-            $product->category_id = $_POST['category_id'];
-            $product->product_type_id = $_POST['product_type_id'];
-            $product->description = $_POST['description'];
-            $product->price = $_POST['price'];
-            $product->on_sale = $_POST['on_sale'];
-            $product->rate = $_POST['rate'];
-            $product->quantity = $_POST['quantity'];
+            $data = [
+                'name' => $_POST['name'],
+                'category_id' => $_POST['category_id'],
+                'product_type_id' => $_POST['product_type_id'],
+                'description' => $_POST['description'],
+                'price' => $_POST['price'],
+                'on_sale' => $_POST['on_sale'],
+                'rate' => $_POST['rate'],
+                'quantity' => $_POST['quantity']
+            ];
 
-            if ($product->create()) {
-                header("Location: index.php?controller=Category&action=viewSubcategoryProducts&category_id={$product->category_id}");
-                exit();
-            } else {
-                echo "Failed to create product.";
+            try {
+                $product = ProductFactory::createProduct($data);
+                if ($product->create()) {
+                    header("Location: index.php?controller=Category&action=viewSubcategoryProducts&category_id={$product->category_id}");
+                    exit();
+                } else {
+                    echo "Failed to create product.";
+                }
+            } catch (Exception $e) {
+                echo $e->getMessage();
             }
         }
     }
@@ -49,21 +56,10 @@ class ProductController {
         // Pass the product to the view
         include 'C:/xampp/htdocs/ecommerce_master/View/products/edit_product_form.php';
     }
-    
-    
-    // Get all products
-    public function getAllProducts() {
-        $product = new Product();
-        return $product->read();
-    }
-
-    // Get a single product by ID
     public function getProductById($id) {
         $product = new Product();
         return $product->readOne($id);
     }
-
-    // Update a product
     public function updateProduct($id, $data = null) {
         $product = new Product();
         $product->id = $id;
@@ -91,8 +87,6 @@ class ProductController {
             die("Error: Failed to update product.");
         }
     }
-    
-
     // Delete a product
     public function deleteProduct($id) {
         $product = new Product();
@@ -106,4 +100,5 @@ class ProductController {
             die("Error: Failed to delete product.");
         }
     }
+    // Other methods (deleteProductForm, editProductForm, getAllProducts, getProductById, updateProduct, deleteProduct) remain unchanged
 }
