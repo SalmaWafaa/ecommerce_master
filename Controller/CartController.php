@@ -1,20 +1,22 @@
 <?php
 
-require_once './Model/CartModel.php';
-require_once './Model/OrderModel.php';
-require_once './Model/PaymentStrategy.php';
+require_once __DIR__. '/../Model/CartModel.php';
+require_once __DIR__. '/../Model/OrderModel.php';
+require_once __DIR__. '/../Model/PaymentStrategy.php';
 
 class CartController {
     private $cart;
     public function __construct() {
         $this->cart = Cart::getInstance();
-        $customerId = $_SESSION['customer_id'] =1;
+        session_start();
+
+        $customerId = $_SESSION['customer_id']??null;
+
         
         if (!$customerId) {
-            echo json_encode(['error' => 'User not logged in.']);
+            echo json_encode(value: ['error' => 'User not logged in.']);
             exit;
         }
-        
         $this->cart = Cart::getInstance();
         $this->cart->initializeCart($customerId);
     }
@@ -58,7 +60,17 @@ class CartController {
             ]);
             exit;
         }
+        if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'addToCart' && isset($_GET['product_id'])) {
+            $productId = intval($_GET['product_id']);
+            $this->cart->addItem($productId, 1);
+            
+            // Redirect to cart page after adding item
+            header("Location: View/cart.php");
+            exit;
+        }
     }
+    
+    
 } $controller = new CartController();
 $controller->handleRequest();
 

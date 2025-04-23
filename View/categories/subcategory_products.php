@@ -21,6 +21,11 @@
                 <button class="add-button">Add Product</button>
             </a>
         </div>
+        <div class="actions">
+    <a href="index.php?controller=RCart&action=viewCart">
+        <button class="view-cart-button">View Cart</button>
+    </a>
+</div>
 
         <div class="product-grid">
             <?php if (!empty($products)): ?>
@@ -38,9 +43,8 @@
                             <a href="index.php?controller=Product&action=deleteProduct&id=<?php echo $product['id']; ?>">
                                 <button class="delete-button">Delete</button>
                             </a>
-                            <a href="index.php?controller=Cart&action=addToCart&product_id=<?php echo $product['id']; ?>">
-                                <button class="cart-button">Add to Cart</button>
-                            </a>
+                            <!-- <a href="addtocart.php?product_id=<?php echo $product['id']; ?>" class="btn btn-secondary">Add to Cart</a> -->
+                            <a href="Controller/Cart/AddtoCart.php?product_id=<?= $product['id']; ?>" class="add-to-cart-link">Add to Cart</a>
                         </div>
                     </div>
                 <?php endforeach; ?>

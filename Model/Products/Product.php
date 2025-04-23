@@ -1,6 +1,6 @@
 <?php
 
-require_once 'C:\xampp\htdocs\ecommerce_master\config\Database.php';
+require_once __DIR__ . '/../../config/dbConnectionSingelton.php';
 
 class Product {
     private $conn;
@@ -19,7 +19,7 @@ class Product {
 
     // Constructor with database connection
     public function __construct() {
-        $database = new Database();
+        $database = Database::getInstance();
         $this->conn = $database->getConnection();
     }
 
@@ -28,74 +28,66 @@ class Product {
         // Check if the category_id exists
         $query = "SELECT id FROM categories WHERE id = ?";
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("i", $this->category_id);
+        $stmt->bindValue(1, $this->category_id, PDO::PARAM_INT);
         $stmt->execute();
-        $stmt->store_result();
-
-        if ($stmt->num_rows === 0) {
+    
+        if ($stmt->rowCount() === 0) {
             throw new Exception("Invalid category_id: Category does not exist.");
         }
-        $stmt->close();
-
+        $stmt->closeCursor(); // Close cursor after checking
+    
         // Check if the product_type_id exists
         $query = "SELECT id FROM producttypes WHERE id = ?";
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("i", $this->product_type_id);
+        $stmt->bindValue(1, $this->product_type_id, PDO::PARAM_INT);
         $stmt->execute();
-        $stmt->store_result();
-
-        if ($stmt->num_rows === 0) {
+    
+        if ($stmt->rowCount() === 0) {
             throw new Exception("Invalid product_type_id: Product type does not exist.");
         }
-        $stmt->close();
-
+        $stmt->closeCursor(); // Close cursor after checking
+    
         // Insert the product
         $query = "INSERT INTO {$this->table} 
                   (name, category_id, product_type_id, description, price, on_sale, rate, quantity) 
                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-
+    
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param(
-            "siisdddi",
-            $this->name,
-            $this->category_id,
-            $this->product_type_id,
-            $this->description,
-            $this->price,
-            $this->on_sale,
-            $this->rate,
-            $this->quantity
-        );
-
+        $stmt->bindValue(1, $this->name, PDO::PARAM_STR);
+        $stmt->bindValue(2, $this->category_id, PDO::PARAM_INT);
+        $stmt->bindValue(3, $this->product_type_id, PDO::PARAM_INT);
+        $stmt->bindValue(4, $this->description, PDO::PARAM_STR);
+        $stmt->bindValue(5, $this->price, PDO::PARAM_STR);
+        $stmt->bindValue(6, $this->on_sale, PDO::PARAM_BOOL);
+        $stmt->bindValue(7, $this->rate, PDO::PARAM_STR);
+        $stmt->bindValue(8, $this->quantity, PDO::PARAM_INT);
+    
         if ($stmt->execute()) {
-            $stmt->close();
             return true;
         }
-
-        $stmt->close();
+    
         return false;
     }
+    
     // Read all products
     public function read() {
         $query = "SELECT * FROM {$this->table}";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
-        $result = $stmt->get_result();
-        $products = $result->fetch_all(MYSQLI_ASSOC);
-        $stmt->close();
-        return $products;
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+        return $result;
     }
 
     // Read a single product by ID
     public function readOne($id) {
         $query = "SELECT * FROM {$this->table} WHERE id = ?";
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("i", $id);
+        $stmt->bindValue(1, $id, PDO::PARAM_INT);
         $stmt->execute();
-        $result = $stmt->get_result();
-        $product = $result->fetch_assoc();
-        $stmt->close();
-        return $product;
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+        return $result;
     }
 
     // Update a product
@@ -107,25 +99,22 @@ class Product {
                   WHERE id = ?";
 
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param(
-            "siisdddii",
-            $this->name,
-            $this->category_id,
-            $this->product_type_id,
-            $this->description,
-            $this->price,
-            $this->on_sale,
-            $this->rate,
-            $this->quantity,
-            $this->id
-        );
+        $stmt->bindValue(1, $this->name, PDO::PARAM_STR);
+        $stmt->bindValue(2, $this->category_id, PDO::PARAM_INT);
+        $stmt->bindValue(3, $this->product_type_id, PDO::PARAM_INT);
+        $stmt->bindValue(4, $this->description, PDO::PARAM_STR);
+        $stmt->bindValue(5, $this->price, PDO::PARAM_STR);
+        $stmt->bindValue(6, $this->on_sale, PDO::PARAM_BOOL);
+        $stmt->bindValue(7, $this->rate, PDO::PARAM_STR);
+        $stmt->bindValue(8, $this->quantity, PDO::PARAM_INT);
+        $stmt->bindValue(9, $this->id, PDO::PARAM_INT);
 
         if ($stmt->execute()) {
-            $stmt->close();
+            $stmt->closeCursor();
             return true;
         }
 
-        $stmt->close();
+        $stmt->closeCursor();
         return false;
     }
 
@@ -133,14 +122,14 @@ class Product {
     public function delete() {
         $query = "DELETE FROM {$this->table} WHERE id = ?";
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("i", $this->id);
+        $stmt->bindValue(1, $this->id, PDO::PARAM_INT);
     
         if ($stmt->execute()) {
-            $stmt->close();
+            $stmt->closeCursor();
             return true;
         }
     
-        $stmt->close();
+        $stmt->closeCursor();
         return false;
     }
 
@@ -148,12 +137,11 @@ class Product {
     public function getProductsByCategory($category_id) {
         $query = "SELECT * FROM {$this->table} WHERE category_id = ?";
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("i", $category_id);
+        $stmt->bindValue(1, $category_id, PDO::PARAM_INT);
         $stmt->execute();
-        $result = $stmt->get_result();
-        $products = $result->fetch_all(MYSQLI_ASSOC);
-        $stmt->close();
+    
+        // Fetch results
+        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $products;
     }
-
 }

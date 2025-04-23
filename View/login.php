@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($result === true) {
         // Login successful, redirect to home.php
-        header("Location: home.php");
+        header("index.php");
         exit();
     } else {
         // Display the error message
