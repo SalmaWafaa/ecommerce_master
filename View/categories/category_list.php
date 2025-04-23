@@ -181,23 +181,16 @@ $isLoggedIn = $userController->isLoggedIn();
 </head>
 <body>
 <div class="header">
-        <h1>HomePage</h1>
-        <div class="auth-buttons">
-            <?php if (!$isLoggedIn): ?>
-                <!-- Show Login and Register buttons if the user is not logged in -->
-                <a href="http://localhost/ecommerce_master/View/login.php?action=login">
-                    <button class="login-button">Login</button>
-                </a>
-                <a href="http://localhost/ecommerce_master/View/register.php?action=register">
-                    <button class="register-button">Register</button>
-                </a>
-            <?php else: ?>
-                <!-- Show a logout button if the user is logged in -->
-                <a href="http://localhost/ecommerce_master/Controller/UserController.php?action=logout">
-                    <button class="logout-button">Logout</button>
-                </a>
-            <?php endif; ?>
-        </div>
+    <h1>HomePage</h1>
+    <div class="auth-buttons">
+        <a href="http://localhost/ecommerce_master2/View/login.php
+">
+            <button class="login-button">Login</button>
+        </a>
+        <a href="http://localhost/ecommerce_master2/View/register.php"
+>
+            <button class="register-button">Register</button>
+        </a>
     </div>
 
     <div class="container">
