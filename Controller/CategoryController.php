@@ -98,10 +98,9 @@ class CategoryController {
         // Fetch main categories (Male and Female)
         $mainCategories = $category->getMainCategories();
     
-        // Debugging: Print fetched main categories
-        echo "<pre>";
-        print_r($mainCategories);
-        echo "</pre>";
+        // echo "<pre>";
+        // print_r($mainCategories);
+        // echo "</pre>";
     
         // Fetch subcategories for each main category
         foreach ($mainCategories as &$mainCategory) {

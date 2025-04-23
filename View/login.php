@@ -17,14 +17,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Attempt to log in
     $result = $userController->login($email, $password);
 
-    if ($result === true) {
-        // Login successful, redirect to home.php
-        header("Location: home.php");
-        exit();
-    } else {
-        // Display the error message
-        echo "Login failed: " . $result;
-    }
+    // if ($result === true) {
+    //     // Login successful, redirect to home.php
+    //     header('C:\xampp\htdocs\ecommerce_master\View\categories\category_list.php');
+    //     exit();
+    // } else {
+    //     // Display the error message
+    //     echo "Login failed: " . $result;
+    // }
 }
 ?>
 

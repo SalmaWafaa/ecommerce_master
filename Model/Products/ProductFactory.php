@@ -12,7 +12,7 @@ class ProductFactory {
             case 2: // Assuming 2 is the ID for BasicPants
                 return new BasicPants($data);
             default:
-                return new Product($data); // Fallback to base Product class
+                return new Product($data); 
         }
     }
 }

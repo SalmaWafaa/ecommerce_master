@@ -65,7 +65,7 @@ class Cart {
             $stmt->execute();
             $stmt->close();
         } else {
-            $query = "INSERT INTO {$this->itemsTable} (d, product_id, quantity) VALUES (?, ?, ?)";
+            $query = "INSERT INTO {$this->itemsTable} (id, product_id, quantity) VALUES (?, ?, ?)";
             $stmt = $this->conn->prepare($query);
             $stmt->bind_param("iii", $this->cartId, $productId, $quantity);
             $stmt->execute();

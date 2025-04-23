@@ -5,7 +5,7 @@ class DatabaseConnection {
     private $connection;
 
     private function __construct() {
-        $this->connection = new mysqli("localhost", "root", "", "sweproj");
+        $this->connection = new mysqli("localhost", "root", "", "swe_master");
         
         if ($this->connection->connect_error) {
             throw new Exception("Database Connection Failed: " . $this->connection->connect_error);
