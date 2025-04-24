@@ -1,11 +1,14 @@
 <?php
 
-require_once 'C:\xampp\htdocs\ecommerce_master\Model\Category\CategoryComposite.php';
+require_once __DIR__ . '/MaleCategory.php';
 
-class MalePantsCategory extends CategoryComposite {
+class MalePantsCategory extends MaleCategory {
     public function __construct() {
         parent::__construct();
-        $this->name='Male Pants';
-        $this->image= 'hhhh.jpg';
+        $this->name = "Male Pants";
+        $this->image = "male_pants.jpg";
     }
+
+    // Optionally override methods specific to MalePantsCategory if needed
 }
+?>

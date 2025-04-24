@@ -37,6 +37,21 @@ abstract class User
         return $this->id;
     }
 
+    // Getter for first name
+    public function getFirstName() {
+        return $this->firstName;
+    }
+
+    // Getter for last name
+    public function getLastName() {
+        return $this->lastName;
+    }
+
+    // Getter for email
+    public function getEmail() {
+        return $this->email;
+    }
+
     // Setter for first name
     public function setFirstName($firstName) {
         if (strlen($firstName) < 2) {
