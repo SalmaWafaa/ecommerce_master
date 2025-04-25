@@ -1,22 +1,22 @@
 <?php
 
-<<<<<<< HEAD
-require_once __DIR__ . '/../../config/dbConnectionSingelton.php';
-=======
-require_once 'C:\xampp\htdocs\ecommerce_master\Model\Products\Product.php';
-require_once 'C:\xampp\htdocs\ecommerce_master\Model\Products\BasicShirt.php';
-require_once 'C:\xampp\htdocs\ecommerce_master\Model\Products\BasicPants.php';
->>>>>>> a7ff493ccf16dd71beed32ca7dc8994bf1c18bce
+abstract class ProductFactory {
+    abstract public function createProduct($id, $name, $description, $price, $quantity, $sizes, $colors, $images, $category, $subcategory);
+}
 
-class ProductFactory {
-    public static function createProduct($data) {
-        switch ($data['product_type_id']) {
-            case 1: // Assuming 1 is the ID for BasicShirt
-                return new BasicShirt($data);
-            case 2: // Assuming 2 is the ID for BasicPants
-                return new BasicPants($data);
+class ConcreteProductFactory extends ProductFactory {
+    public function createProduct($id, $name, $description, $price, $quantity, $sizes, $colors, $images, $category, $subcategory) {
+        // Depending on the type of product, return the appropriate class
+        switch ($category) {
+            case 'Shirt':
+                return new BasicShirt($id, $name, $description, $price, $quantity, $sizes, $colors, $images, $category, $subcategory);
+            case 'Pants':
+                return new BasicPants($id, $name, $description, $price, $quantity, $sizes, $colors, $images, $category, $subcategory);
+            case 'Skirt':
+                return new BasicSkirt($id, $name, $description, $price, $quantity, $sizes, $colors, $images, $category, $subcategory);
             default:
-                return new Product($data); 
+                throw new Exception("Product type not found.");
         }
     }
 }
+?>

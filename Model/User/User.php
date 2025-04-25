@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../config/dbConnectionSingelton.php';
+require_once __DIR__ . '/../../config/dbConnectionSingelton.php';
 
 abstract class User 
 {

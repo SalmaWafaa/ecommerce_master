@@ -133,7 +133,7 @@ if (session_status() == PHP_SESSION_NONE) {
         <?php endif; ?> 
         <h2>Register</h2>
         
-        <form action="../Controller/UserController.php?action=register" method="POST">
+        <form action="../../Controller/UserController.php?action=register" method="POST">
             
             <div class="form-group">
                 <label for="userType">Account Type</label>

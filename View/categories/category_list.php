@@ -21,10 +21,10 @@
             </a>
         <?php else: ?>
             <!-- Login and Register buttons -->
-            <a href="View/login.php">
+            <a href="View/User/login.php">
                 <button class="login-button">Login</button>
             </a>
-            <a href="View/register.php">
+            <a href="View/User/register.php">
                 <button class="register-button">Register</button>
             </a>
         <?php endif; ?>

@@ -55,6 +55,13 @@ try {
     elseif ($action === 'updateProfile') {
         $params = [$_POST];
     }
+    // elseif ($action == 'viewProductDetails') {
+    //     $id = $_GET['id'] ?? null;
+    //     if ($id) {
+    //         $controllerInstance = new ProductController();
+    //         $controllerInstance->viewProductDetails($id);
+    //     }
+    // }
     else {
         // For other actions, pass only the relevant GET parameters
         $params = array_values(array_filter($_GET, function($key) {

@@ -1,104 +1,84 @@
-
 <?php
-
-require_once 'C:\xampp\htdocs\ecommerce_master\Model\Products\ProductFactory.php';
-
+include_once __DIR__ . '/../Model/Products/ProductModel.php';
+include_once __DIR__ . '/../Model/Category/CategoryComposite.php';
 class ProductController {
-    public function addProductForm() {
-        include 'C:\xampp\htdocs\ecommerce_master\View\products\add_product_form.php';
+
+    // View Product Details
+    public function viewProductDetails($productId) {
+        $productModel = new ProductModel();
+        $product = $productModel->getProductById($productId);
+
+        if ($product) {
+            $images = $productModel->getProductImages($productId);
+            $sizes = $productModel->getProductSizes($productId);
+            $colors = $productModel->getProductColors($productId);
+
+            include __DIR__ . '/../View/products/product_details.php';
+        } else {
+            header('Location: /ecommerce_master/index.php?error=ProductNotFound');
+            exit();
+        }
     }
 
-    public function createProduct() {
+    // Add Product (Admin Only)
+    public function addProduct() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $data = [
-                'name' => $_POST['name'],
-                'category_id' => $_POST['category_id'],
-                'product_type_id' => $_POST['product_type_id'],
-                'description' => $_POST['description'],
-                'price' => $_POST['price'],
-                'on_sale' => $_POST['on_sale'],
-                'rate' => $_POST['rate'],
-                'quantity' => $_POST['quantity']
-            ];
+            // Safely handle form data and ensure required fields are set
+            $name = $_POST['name'] ?? '';
+            $description = $_POST['description'] ?? '';
+            $price = $_POST['price'] ?? '';
+            $category_id = $_POST['category_id'] ?? '';
+            $images = isset($_POST['images']) ? explode(',', $_POST['images']) : [];
+            $sizes = isset($_POST['sizes']) ? explode(',', $_POST['sizes']) : [];
+            $colors = isset($_POST['colors']) ? explode(',', $_POST['colors']) : [];
+            $product_type_id = $_POST['product_type_id'] ?? '';
+            $on_sale = $_POST['on_sale'] ?? 0;  // Default to 0 if not set
 
-            try {
-                $product = ProductFactory::createProduct($data);
-                if ($product->create()) {
-                    header("Location: index.php?controller=Category&action=viewSubcategoryProducts&category_id={$product->category_id}");
-                    exit();
-                } else {
-                    echo "Failed to create product.";
-                }
-            } catch (Exception $e) {
-                echo $e->getMessage();
+            if (!$name || !$description || !$price || !$category_id) {
+                echo "Please fill in all required fields.";
+                return;
             }
+
+            $productModel = new ProductModel();
+            $productModel->addProduct($name, $description, $price, $category_id, $images, $sizes, $colors, $product_type_id, $on_sale);
+
+            header("Location: index.php?controller=Product&action=listProducts&message=ProductAdded");
+            exit();
         }
-    }
-    public function deleteProductForm($id) {
-        $product = new Product();
-        $productData = $product->readOne($id);
-        
-        if (!$productData) {
-            echo "Product not found.";
-            return;
-        }
-    
-        include 'C:\xampp\htdocs\ecommerce_master\View\products\delete_product_form.php';
+
+        include __DIR__ . '/../View/products/add_product_form.php';  // Correct path to the product edit form
     }
 
-    public function editProductForm($id) {
-        $product = $this->getProductById($id);
-    
+    // Edit Product (Admin Only)
+    public function updateProduct($id) {
+        // Get the product data from the database
+        $productModel = new ProductModel();
+        $categoryModel = new CategoryComposite();  // Assuming you have a CategoryModel to fetch categories
+        $product = $productModel->getProductById($id);
+        $categories = $categoryModel->getMainCategories();
+
         if (!$product) {
-            die("Error: Product not found.");
-        }
-    
-        // Pass the product to the view
-        include 'C:/xampp/htdocs/ecommerce_master/View/products/edit_product_form.php';
-    }
-    public function getProductById($id) {
-        $product = new Product();
-        return $product->readOne($id);
-    }
-    public function updateProduct($id, $data = null) {
-        $product = new Product();
-        $product->id = $id;
-    
-        // If $data is not provided, fetch it from $_POST
-        if ($data === null) {
-            $data = $_POST;
-        }
-    
-        // Assign values from $data to the product object
-        $product->name = $data['name'] ?? '';
-        $product->category_id = $data['category_id'] ?? '';
-        $product->product_type_id = $data['product_type_id'] ?? '';
-        $product->description = $data['description'] ?? '';
-        $product->price = $data['price'] ?? 0;
-        $product->on_sale = $data['on_sale'] ?? 0;
-        $product->rate = $data['rate'] ?? 0;
-        $product->quantity = $data['quantity'] ?? 0;
-    
-        // Update the product
-        if ($product->update()) {
-            header("Location: index.php?controller=Product&action=editProductForm&id=$id&status=success");
+            // Handle error if product not found
+            header("Location: index.php?controller=Product&action=listProducts&error=ProductNotFound");
             exit();
-        } else {
-            die("Error: Failed to update product.");
         }
+    
+        // Get associated product images, colors, and sizes
+        $productImages = $productModel->getProductImages($id);
+        $productColors = $productModel->getProductColors($id);
+        $productSizes = $productModel->getProductSizes($id);
+    
+        // Pass the data to the view
+        include __DIR__ . '/../View/products/edit_product_form.php';
     }
-    // Delete a product
+
+    // Delete Product (Admin Only)
     public function deleteProduct($id) {
-        $product = new Product();
-        $product->id = $id;
-    
-        if ($product->delete()) {
-            // Redirect to the list of products or categories after successful deletion
-            header("Location: index.php?controller=Category&action=listCategories&status=deleted");
-            exit();
-        } else {
-            die("Error: Failed to delete product.");
-        }
+        $productModel = new ProductModel();
+        $productModel->deleteProduct($id);
+
+        header("Location: index.php");
+        exit();
     }
-    // Other methods (deleteProductForm, editProductForm, getAllProducts, getProductById, updateProduct, deleteProduct) remain unchanged
 }
+?>

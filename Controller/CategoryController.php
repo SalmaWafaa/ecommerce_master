@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once __DIR__ . '/../Model/Category/CategoryComposite.php';
-require_once __DIR__ . '/../Model/products/Product.php'; // If needed
+require_once __DIR__ . '/../Model/products/ProductModel.php'; // If needed
 require_once __DIR__ . '/UserController.php'; // Include UserController
 
 class CategoryController {
