@@ -123,6 +123,7 @@
                         <p><?php echo htmlspecialchars($product['description']); ?></p>
                         <p><strong>Price:</strong> $<?php echo number_format($product['price'], 2); ?></p>
                         <a href="index.php?controller=Product&action=viewProductDetails&product_id=<?php echo $product['id']; ?>" class="add-to-cart-link">View Details</a>
+                        <a href="Controller/Cart/AddtoCart.php?product_id=<?= $product['id']; ?>" class="add-to-cart-link">Add to Cart</a>
 
                         <!-- Admin-only Action Buttons -->
                         <?php $userController = new UserController(); ?>
@@ -142,7 +143,9 @@
                 <p>No products found in this subcategory.</p>
             <?php endif; ?>
         </div>
-
+        <a href="index.php?controller=RCart&action=viewCart">
+            <button class="view-cart-button">View Cart</button>
+        </a>
         <!-- Add Product Button (only for admin) -->
         <?php if ($userController->isAdmin()): ?>
             <div class="admin-actions">
@@ -150,6 +153,9 @@
                     <button>Add Product</button>
                 </a>
             </div>
+            <div class="actions">
+        
+    </div>
         <?php endif; ?>
     </div>
 </body>
