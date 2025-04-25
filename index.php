@@ -50,12 +50,25 @@ try {
     // If the action is 'deleteProduct', pass the product ID
     if ($action === 'deleteProduct') {
         $params = [$_GET['id'] ?? null];
-    } else {
+    } 
+    // For user profile update
+    elseif ($action === 'updateProfile') {
+        $params = [$_POST];
+    }
+    // elseif ($action == 'viewProductDetails') {
+    //     $id = $_GET['id'] ?? null;
+    //     if ($id) {
+    //         $controllerInstance = new ProductController();
+    //         $controllerInstance->viewProductDetails($id);
+    //     }
+    // }
+    else {
         // For other actions, pass only the relevant GET parameters
         $params = array_values(array_filter($_GET, function($key) {
             return $key !== 'controller' && $key !== 'action';
         }, ARRAY_FILTER_USE_KEY));
     }
+    
 
     // Call the action method with the prepared parameters
     call_user_func_array([$controllerInstance, $action], $params);

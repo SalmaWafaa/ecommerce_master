@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../config/dbConnectionSingelton.php';
+require_once __DIR__ . '/../../config/dbConnectionSingelton.php';
 
 abstract class User 
 {
@@ -35,6 +35,21 @@ abstract class User
     // Getter for ID
     public function getId() {
         return $this->id;
+    }
+
+    // Getter for first name
+    public function getFirstName() {
+        return $this->firstName;
+    }
+
+    // Getter for last name
+    public function getLastName() {
+        return $this->lastName;
+    }
+
+    // Getter for email
+    public function getEmail() {
+        return $this->email;
     }
 
     // Setter for first name

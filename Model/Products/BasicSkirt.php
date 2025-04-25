@@ -1,7 +1,7 @@
 <?php
 
-class BasicPants extends AbstractProduct {
-    private $fitType;
+class BasicSkirt extends AbstractProduct {
+    private $skirtLength;
 
     public function __construct($id, $name, $description, $price, $quantity, $sizes, $colors, $images, $category, $subcategory) {
         $this->id = $id;
@@ -14,7 +14,7 @@ class BasicPants extends AbstractProduct {
         $this->images = $images;
         $this->category = $category;
         $this->subcategory = $subcategory;
-       // $this->fitType = $fitType;
+        //$this->skirtLength = $skirtLength;
     }
 
     public function getDescription() {
@@ -44,11 +44,12 @@ class BasicPants extends AbstractProduct {
     public function getSubcategory() {
         return $this->subcategory;
     }
-    public function getFitType() {
-        return $this->fitType;
+    public function getSkirtLength() {
+        return $this->skirtLength;
     }
-    public function setFitType($fitType) {
-        $this->fitType = $fitType;
+    public function setSkirtLength($skirtLength) {
+        $this->skirtLength = $skirtLength;
     }
+
 }
 ?>

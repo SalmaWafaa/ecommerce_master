@@ -5,7 +5,7 @@ require_once 'Admin.php';
 require_once 'Customer.php';
 
 class UserFactory {
-     function __construct() {
+    private function __construct() {
         // Private constructor to prevent instantiation
     }
 
