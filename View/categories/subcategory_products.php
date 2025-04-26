@@ -93,7 +93,9 @@ $isAdmin = $userController->isAdmin(); // Get the flag
                 <p>No products found in this subcategory.</p>
             <?php endif; ?>
         </div>
-
+        <a href="index.php?controller=RCart&action=viewCart">
+            <button class="view-cart-button">View Cart</button>
+        </a>
          <?php if ($isAdmin): ?>
              <div class="add-product-button">
                  <a href="index.php?controller=Product&action=showAddProductForm&subcategory_id=<?php echo isset($subcategory) ? $subcategory->getId() : ''; ?>">
@@ -102,5 +104,7 @@ $isAdmin = $userController->isAdmin(); // Get the flag
              </div>
          <?php endif; ?>
 
-         </div> </body>
+         </div>
+        
+        </body>
 </html>

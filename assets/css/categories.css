@@ -101,6 +101,25 @@ button {
     background-color: #138496;
 }
 
+.admin-dashboard-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-right: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.3s;
+}
+
+.admin-dashboard-button:hover {
+    background-color: #45a049;
+    color: white;
+    text-decoration: none;
+}
+
 /* Image styling */
 .category-box img {
     max-width: 100%;
@@ -113,48 +132,56 @@ button {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 20px;
+    padding: 15px 30px;
     background-color: #007bff;
-    color: white;
 }
 
-.header h1 {
+.brand {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.brand h1 {
     color: white;
     margin: 0;
+    font-size: 32px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.slogan {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    margin-top: 4px;
+    font-style: italic;
 }
 
 .auth-buttons {
     display: flex;
+    align-items: center;
     gap: 10px;
 }
 
 .auth-buttons a {
-    text-decoration: none;
-}
-
-.auth-buttons button {
-    padding: 8px 12px;
-    font-size: 14px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s;
+    background-color: rgba(255, 255, 255, 0.2);
     color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
 }
 
-.login-button {
-    background-color: #28a745;
+.auth-buttons a:hover {
+    background-color: rgba(255, 255, 255, 0.3);
 }
 
-.login-button:hover {
-    background-color: #218838;
+.welcome-message {
+    color: white;
+    margin-right: 10px;
 }
 
-.register-button {
-    background-color: #ffc107;
-    color: black;
-}
-
-.register-button:hover {
-    background-color: #e0a800;
+.contact-button {
+    margin-left: 10px;
 }

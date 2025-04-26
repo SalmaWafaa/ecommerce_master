@@ -101,7 +101,7 @@ class EditProfileView {
                     <div class="error"><?= htmlspecialchars($error) ?></div>
                 <?php endif; ?>
                 
-                <form method="POST" action="/index.php?controller=User&action=updateProfile">
+                <form method="POST" action="../Controller/UserController.php?action=updateProfile">
                     <div class="form-group">
                         <label for="firstName">First Name:</label>
                         <input type="text" id="firstName" name="firstName" 
@@ -129,9 +129,7 @@ class EditProfileView {
                     </div>
                     
                     <div class="buttons">
-                        <a href="index.php">
-                            <button type="button" class="cancel-button">Cancel</button>
-                        </a>
+                        <button type="button" class="cancel-button" onclick="window.location.href='../index.php'">Cancel</button>
                         <button type="submit">Save Changes</button>
                     </div>
                 </form>
