@@ -46,22 +46,26 @@ try {
 
     // Prepare parameters for the action method
     $params = [];
-
+    $controllerName = $_GET['controller'] ?? 'Category'; // Default controller
+    $actionName = $_GET['action'] ?? 'listCategories';  // Default action
     // If the action is 'deleteProduct', pass the product ID
-    if ($action === 'deleteProduct') {
-        $params = [$_GET['id'] ?? null];
-    } 
-    // For user profile update
-    elseif ($action === 'updateProfile') {
-        $params = [$_POST];
+    if ($controllerName === 'Product') {
+        if ($actionName === 'addProduct' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $actionName = 'handleAddProduct'; // Map POST request to handler method
+        } elseif ($actionName === 'addProduct' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+             $actionName = 'showAddProductForm'; // Map GET request to form display method
+        } elseif ($actionName === 'updateProduct' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $actionName = 'updateProductPost'; // Map POST update to handler
+        } elseif ($actionName === 'editProduct' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+             $actionName = 'editProduct'; // Keep GET for edit form display
+             // Note: The edit form POSTs to action=updateProduct, which gets mapped above
+        }
+        // Add similar mappings if needed for other controllers/actions (e.g., profile update)
+    } elseif ($controllerName === 'User' && $actionName === 'updateProfile' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+         $actionName = 'handleUpdateProfile'; // Example mapping
     }
-    // elseif ($action == 'viewProductDetails') {
-    //     $id = $_GET['id'] ?? null;
-    //     if ($id) {
-    //         $controllerInstance = new ProductController();
-    //         $controllerInstance->viewProductDetails($id);
-    //     }
-    // }
+    
+    
     else {
         // For other actions, pass only the relevant GET parameters
         $params = array_values(array_filter($_GET, function($key) {
@@ -69,7 +73,6 @@ try {
         }, ARRAY_FILTER_USE_KEY));
     }
     
-
     // Call the action method with the prepared parameters
     call_user_func_array([$controllerInstance, $action], $params);
 } catch (Exception $e) {

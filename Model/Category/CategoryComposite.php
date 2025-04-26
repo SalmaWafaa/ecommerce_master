@@ -31,6 +31,14 @@ class CategoryComposite implements ICategory {
             throw new \Exception("Database connection failed.");
         }
     }
+    public function getAllCategories() {
+        $query = "SELECT id, name FROM categories"; // Adjust this to match your DB structure
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+    
+        return $stmt->fetchAll(PDO::FETCH_ASSOC); // Return all categories
+    }
+    
 
     // --- Getters ---
     public function getId(): int {

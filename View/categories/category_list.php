@@ -15,7 +15,7 @@
             <a href="Controller/UserController.php?action=editProfile"> 
             <button class="edit-profile-button">Edit Profile</button>
                     </a>
-                <a href="/index.php?controller=User&action=editProfile">
+                <a href="/index.php?controller=User&action=logout">
 
                 <button class="logout-button">Logout</button>
             </a>
