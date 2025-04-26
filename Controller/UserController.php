@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../config/dbConnectionSingelton.php';
-require_once __DIR__ . '/../Model/UserFactory.php';
-require_once __DIR__ . '/../View/EditProfileView.php';
+require_once __DIR__ . '/../Model/User/UserFactory.php';
+require_once __DIR__ . '/../View/User/EditProfileView.php';
 
 class UserController {
     private $db;
@@ -161,7 +161,7 @@ class UserController {
             if (!empty($errors)) {
                  $_SESSION['register_error'] = implode("<br>", $errors);
                  // Adjust path if your register form is not in ../View/
-                 header("Location: ../View/register.php"); 
+                 header("Location: ../View/User/register.php"); 
                  exit();
             }
             // --- End Validation ---
@@ -184,7 +184,7 @@ class UserController {
                     // Use login_error or a general message key
                     $_SESSION['login_error'] = "Registration successful, but auto-login failed. Please log in manually. " . ($loginResult ?: ''); 
                     // Adjust path if your login form is not in ../View/
-                    header("Location: ../View/login.php"); 
+                    header("Location: ../View/User/login.php"); 
                     exit();
                 }
                 // If login() returned true but didn't redirect (unlikely based on your code), redirect now:
@@ -197,13 +197,13 @@ class UserController {
                 $_SESSION['register_error'] = $result; 
                 // Redirect back to the registration page to display the error
                 // Adjust path if your register form is not in ../View/
-                header("Location: ../View/register.php"); 
+                header("Location: ../View/User/register.php"); 
                 exit();
             }
         } else {
             // If accessed via GET, just redirect to the registration form page
             // Adjust path if your register form is not in ../View/
-            header("Location: ../View/register.php"); 
+            header("Location: ../View/User/register.php"); 
             exit();
         }
     } 
@@ -217,7 +217,7 @@ class UserController {
     public function editProfile($error = null) {
         // Ensure the user is logged in
         if (!isset($_SESSION['user_id'])) {
-            header("Location: /View/login.php");
+            header("Location: /View/User/login.php");
             exit();
         }
     

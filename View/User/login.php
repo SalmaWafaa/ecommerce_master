@@ -100,7 +100,7 @@
             </div>
         <?php endif; ?>
         
-        <form action="../Controller/UserController.php?action=login" method="POST">
+        <form action="../../Controller/UserController.php?action=login" method="POST">
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" placeholder="Enter your email" required>

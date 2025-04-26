@@ -21,12 +21,12 @@
                     <i class="bi bi-speedometer2"></i> Admin Dashboard
                 </a>
             <?php endif; ?>
-            <a href="Controller/UserController.php?action=editProfile" class="edit-profile-button">Edit Profile</a>
+            <a href="Controller/UserController.php?action=logout" class="edit-profile-button">Edit Profile</a>
             <a href="Controller/UserController.php?action=logout" class="logout-button">Logout</a>
             <a href="Controller/ContactController.php?action=contact" class="contact-button">Contact Us</a>
         <?php else: ?>
-            <a href="View/login.php" class="login-button">Login</a>
-            <a href="View/register.php" class="register-button">Register</a>
+            <a href="View/User/login.php" class="login-button">Login</a>
+            <a href="View/User/register.php" class="register-button">Register</a>
             <a href="Controller/ContactController.php?action=contact" class="contact-button">Contact Us</a>
         <?php endif; ?>
     </div>
