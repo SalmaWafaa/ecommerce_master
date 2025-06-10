@@ -5,28 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Categories</title>
     <link rel="stylesheet" href="assets/css/categories.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
 <div class="header">
-    <h1>HomePage</h1>
+    <div class="brand">
+        <h1>SYS</h1>
+        <span class="slogan">Style Your Success</span>
+    </div>
     <div class="auth-buttons">
         <?php if ($isLoggedIn): ?>
             <span class="welcome-message">Welcome, <?php echo htmlspecialchars($_SESSION['first_name'] ?? 'User'); ?>!</span>
-            <a href="Controller/UserController.php?action=editProfile"> 
-            <button class="edit-profile-button">Edit Profile</button>
-                    </a>
-                <a href="/index.php?controller=User&action=logout">
-
-                <button class="logout-button">Logout</button>
-            </a>
+            <?php if ($isAdmin): ?>
+                <a href="index.php?controller=AdminDashboard&action=index" class="admin-dashboard-button">
+                    <i class="bi bi-speedometer2"></i> Admin Dashboard
+                </a>
+            <?php endif; ?>
+            <a href="Controller/UserController.php?action=logout" class="edit-profile-button">Edit Profile</a>
+            <a href="Controller/UserController.php?action=logout" class="logout-button">Logout</a>
+            <a href="Controller/ContactController.php?action=contact" class="contact-button">Contact Us</a>
         <?php else: ?>
-            <!-- Login and Register buttons -->
-            <a href="View/User/login.php">
-                <button class="login-button">Login</button>
-            </a>
-            <a href="View/User/register.php">
-                <button class="register-button">Register</button>
-            </a>
+            <a href="View/User/login.php" class="login-button">Login</a>
+            <a href="View/User/register.php" class="register-button">Register</a>
+            <a href="Controller/ContactController.php?action=contact" class="contact-button">Contact Us</a>
         <?php endif; ?>
     </div>
 </div>

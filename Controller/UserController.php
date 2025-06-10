@@ -24,14 +24,21 @@ class UserController {
         return isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'admin';
     }
 
-    // Logout the user and destroy the session
+
     public function logout() {
-        session_start();
-        session_unset(); // Unset all session variables
-        session_destroy(); // Destroy the session
-    
-        // Redirect to the index page after logging out
-        header("Location: index.php");
+        // Clear all session variables
+        $_SESSION = array();
+        
+        // Destroy the session cookie
+        if (isset($_COOKIE[session_name()])) {
+            setcookie(session_name(), '', time()-3600, '/');
+        }
+        
+        // Destroy the session
+        session_destroy();
+        
+        // Redirect to homepage
+        header("Location: /ecommerce_master/index.php");
         exit();
     }
     
@@ -118,6 +125,7 @@ class UserController {
             }
         }
     }
+
     public function handleRegistrationRequest() {
         // Only proceed for POST requests
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -198,40 +206,15 @@ class UserController {
             header("Location: ../View/User/register.php"); 
             exit();
         }
-    } // End handleRegistrationRequest
+    } 
 
     public function isLoggedIn() {
         // Example logic to check if a user is logged in
         return isset($_SESSION['user_id']);
     }
 
-    public function editAccount($userId, $firstName, $lastName, $email, $password) {
-        try {
-            // Fetch user from the database
-            $query = "SELECT * FROM users WHERE id = ?";
-            $stmt = $this->db->prepare($query);
-            $stmt->execute([$userId]);
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-            if ($row) {
-                $userType = ($row['user_type_id'] == 1) ? 'admin' : 'customer';
-                $user = UserFactory::createUser($userType, $row['id'], $row['first_name'], $row['last_name'], $row['email'], $row['password']);
-    
-                // Update user details
-                $user->editAccount(); // Assuming the User class handles the update
-                return true;
-            }
-    
-            return false; // No user found with the given ID
-        } catch (PDOException $e) {
-            // Log the error or handle it accordingly
-            echo "Error: " . $e->getMessage();
-            return false;
-        }
-    }
-    
 
-    public function editProfile() {
+    public function editProfile($error = null) {
         // Ensure the user is logged in
         if (!isset($_SESSION['user_id'])) {
             header("Location: /View/User/login.php");
@@ -266,7 +249,7 @@ class UserController {
     
                 // Render the EditProfile view with the user data
                 $view = new EditProfileView();
-                $view->render($user);
+                $view->render($user, $error);
                 exit(); // Ensure no further processing after rendering the view
             } else {
                 // If no user was found, redirect to the home page
@@ -280,9 +263,8 @@ class UserController {
         }
     }
     public function updateProfile() {
-        // Check if user is logged in
         if (!isset($_SESSION['user_id'])) {
-            header("Location: /.php");
+            header("Location: ../View/login.php");
             exit();
         }
     
@@ -294,85 +276,45 @@ class UserController {
     
         // Validate inputs
         if (empty($firstName) || empty($lastName) || empty($email)) {
-            $this->renderEditForm($userId, "All fields except password are required.");
+            $this->editProfile("All fields except password are required.");
             return;
         }
     
         try {
-            // Check if email is already taken by another user
+            // Check if email is already taken
             $query = "SELECT id FROM users WHERE email = ? AND id != ?";
             $stmt = $this->db->prepare($query);
             $stmt->execute([$email, $userId]);
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-            if ($result) {
-                $this->renderEditForm($userId, "Email address is already taken by another user.");
+            
+            if ($stmt->fetch(PDO::FETCH_ASSOC)) {
+                $this->editProfile("Email address is already taken by another user.");
                 return;
             }
     
-            // Update the user profile in the database
+            // Update user data
             if (empty($password)) {
-                // Update without changing password
                 $query = "UPDATE users SET first_name = ?, last_name = ?, email = ? WHERE id = ?";
                 $stmt = $this->db->prepare($query);
                 $stmt->execute([$firstName, $lastName, $email, $userId]);
             } else {
-                // Update including new password
                 $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
                 $query = "UPDATE users SET first_name = ?, last_name = ?, email = ?, password = ? WHERE id = ?";
                 $stmt = $this->db->prepare($query);
                 $stmt->execute([$firstName, $lastName, $email, $hashedPassword, $userId]);
             }
     
-            // Update session with new email
             $_SESSION['email'] = $email;
-    
-            // Redirect to home page
-            header("Location: index.php");
+            $_SESSION['first_name'] = $firstName;
+            
+            // Use relative path for redirection
+            header("Location: ../index.php");
             exit();
     
         } catch (PDOException $e) {
-            // Handle error (log or show error message)
-            $this->renderEditForm($userId, "An error occurred while updating your profile. Please try again.");
+            $this->editProfile("An error occurred while updating your profile. Please try again.");
         }
     }
-    
-    private function renderEditForm($userId, $error = null) {
-        try {
-            // Fetch user from the database
-            $query = "SELECT * FROM users WHERE id = ?";
-            $stmt = $this->db->prepare($query);
-            $stmt->execute([$userId]);
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-            // Check if user exists
-            if ($row) {
-                $userType = ($row['user_type_id'] == 1) ? 'admin' : 'customer';
-                $user = UserFactory::createUser(
-                    $userType,
-                    $row['id'],
-                    $row['first_name'],
-                    $row['last_name'],
-                    $row['email'],
-                    $row['password']
-                );
-    
-                // Render the edit profile view with the user details
-                $view = new EditProfileView();
-                $view->render($user, $error);
-            } else {
-                // If user not found, redirect or show error
-                header("Location: /index.php");
-                exit();
-            }
-    
-        } catch (PDOException $e) {
-            // Handle database connection or query error
-            $this->renderEditForm($userId, "Failed to load user data. Please try again later.");
-        }
-    }
-    
-    
+
 }
 // Handle logout action
 if (isset($_GET['action'])) {
@@ -395,8 +337,8 @@ if (isset($_GET['action'])) {
             $controller->updateProfile();
             break;
         default:
-            echo "Invalid action.";
-            break;
+            header("Location: /ecommerce_master/index.php");
+            exit();
     }
 }
 ?>
