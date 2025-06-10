@@ -41,7 +41,6 @@
                 <button type="submit" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">Proceed to Payment</button>
             </form>
         </div>
-        <?php if (!empty($cartItems)): ?> -->
     <!-- Existing cart table code... -->
 
     <form action="index.php" method="get">
@@ -50,7 +49,24 @@
         <input type="hidden" name="amount" value="<?= array_sum(array_column($cartItems, 'total_price')) ?>">
         <button type="submit" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">Proceed to Payment</button>
         </form>
-<?php endif; ?>
+
+        <form action="index.php" method="get">
+    <input type="hidden" name="controller" value="Order">
+    <input type="hidden" name="action" value="createOrder">
+    
+    <!-- Payment type dropdown -->
+    <label for="payment_type">Choose Payment Method:</label>
+    <select name="payment_type" id="payment_type" style="padding: 5px; font-size: 14px;">
+        <option value="CreditCard">Credit Card</option>
+        <option value="PayPal">PayPal</option>
+        <option value="BankTransfer">Bank Transfer</option>
+    </select>
+
+    <button type="submit" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">
+        🛒 Place Order
+    </button>
+</form>
+
 
 
     <?php endif; ?>

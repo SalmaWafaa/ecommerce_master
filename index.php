@@ -5,6 +5,8 @@ spl_autoload_register(function ($class_name) {
         __DIR__ . '/Controller/',
         __DIR__ . '/Model/Products/',
         __DIR__ . '/Controller/Cart/',
+        __DIR__ . '/Controller/Order/',
+
             
     ];
 
